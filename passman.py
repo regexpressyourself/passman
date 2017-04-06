@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+
 from splash import showSplash
 
 from functions import quit, getServiceFromUser, getPasswordFromUser, writeToFile
@@ -14,5 +15,6 @@ def main():
 
 
 # run the program
-showSplash()
+showSplash()Sam dev
 main()
+
