@@ -15,6 +15,6 @@ def main():
 
 
 # run the program
-showSplash()Sam dev
+showSplash()
 main()
 
