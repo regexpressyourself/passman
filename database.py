@@ -77,3 +77,20 @@ def addService(name, pw, serviceUrl="", serviceUserName=""):
     else:
         print("\nERROR: Database already contains service " + name+"\n")
 
+def removeService(name):
+    '''
+    Remove a service from an account.
+    '''
+
+    result = collection.find_one_and_update({'name': userName},{'$pop':{
+        'data': {
+            'service': name
+            }
+        }
+        })
+
+
+
+
+
+
