@@ -1,0 +1,125 @@
+* DB Schema
+Database will be located in the ~/.passman/ folder
+
+  #+BEGIN_SRC json
+    {
+        _id: 1,
+        name: "encryped name (key=master password)",
+        password: "hashed password",
+        data: [
+            {
+                _id: 1,
+                service: "encrypted name of service (key=master pw; cannot be duplicate)",
+                servicePassword: "encryped service password (key = master pw)",
+                serviceUrl: "encryped service url (key = master pw)".
+                    serviceUserName: "encryped service username (key = master pw)"
+            }
+        ]
+    }
+  #+END_SRC
+
+* API
+** list
+   Called from user menu or via:
+   #+BEGIN_SRC
+    passman list
+   #+END_SRC
+   - List services as:
+     #+BEGIN_SRC
+       1. Google | Sam
+          https://www.google.com
+
+       2. Yahoo | Sam
+          https://www.yahoo.com
+
+       3. Github | Sam
+          https://www.github.com
+     #+END_SRC
+** add
+   Add a new service to the database
+   - Called from user menu or via
+   #+BEGIN_SRC
+    passman add
+   #+END_SRC
+
+   - Walk user through each of the following:
+*** Name (required - no duplicates)
+    - Name of the service
+    - Must be input by user
+    - Cannot match any existing names in db
+*** Password (required)
+    - Password for service.
+    - Prompt for manual entry or Auto generation
+**** Auto Generate (Default)
+     - prompt for the following:
+***** Length
+      - Default: 30 characters
+***** Caps - Yes | No | Either
+      - Default: either
+***** Lowercase - Yes | No | Either
+      - Default: either
+***** Integers - Yes | No | Either
+      - Default: either
+***** Special Chars - Yes | No | Either
+      - Default: either
+**** Manual entry
+     - prompt for password
+*** URL (not required)
+    - URL for login page of service
+*** User Name (not required)
+    - User name or email associated with service
+** remove
+   Remove a service and all associated data from the database
+   - Called via menu or command line
+     - command line takes an optional service name as a parameter (see below)
+     - if no service name is provided, user will be prompted for one
+   #+BEGIN_SRC
+    passman remove [service name]
+   #+END_SRC
+** edit
+   Walk user through the same steps as "Add". Prompt user to edit each field, or press enter to keep the data the same
+
+   - Called via menu or command line
+     - command line takes an optional service name as a parameter (see below)
+     - if no service name is provided, user will be prompted for one
+   #+BEGIN_SRC
+    passman edit [service name]
+   #+END_SRC
+
+** getname
+   Copies user name for a service to clipboard for 30 seconds
+
+   - Called via menu or command line
+     - command line takes an optional service name as a parameter (see below)
+     - if no service name is provided, user will be prompted for one
+   #+BEGIN_SRC
+    passman getname [service name]
+   #+END_SRC
+** getpass
+   Copies user password for a service to clipboard for 30 seconds
+
+   - Called via menu or command line
+     - command line takes an optional service name as a parameter (see below)
+     - if no service name is provided, user will be prompted for one
+   #+BEGIN_SRC
+    passman getpass [service name]
+   #+END_SRC
+** geturl 
+   Copies service url to clipboard for 30 seconds
+
+   - Called via menu or command line
+     - command line takes an optional service name as a parameter (see below)
+     - if no service name is provided, user will be prompted for one
+   #+BEGIN_SRC
+    passman geturl [service name]
+   #+END_SRC
+** open
+   Opens the url for a service in the browser 
+
+   - Called via menu or command line
+     - command line takes an optional service name as a parameter (see below)
+     - if no service name is provided, user will be prompted for one
+   #+BEGIN_SRC
+    passman open [service name]
+   #+END_SRC
+
