@@ -1,0 +1,33 @@
+#+TITLE: Passman: The Terminal-Based Password Manager - Abstract
+#+AUTHOR: Sam Messina and Dan Jensen
+#+OPTIONS: toc:nil
+#+DATE: April 9, 2017 
+#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
+
+* Language
+
+  Passman will be written in Python 3. It will likely make use of a Python library to aid in generating the terminal user interface.
+
+* API Description
+
+  Passman will allow the user to perform all basic Create-Read-Update-Delete operations on passwords for different services. Passman will also create optimally-secure passwords for the user.
+
+
+* Similar Systems
+
+  There are many competitors to Passman already in existence. Passman will emulate the likes of LastPass, KeypassX, Enpass, etc. While all of these options will likely be more feature-full, Passman will have the advantage of being terminal-based making it ideal for users more comfortable with the command line.
+
+  We will be implementing features such as password generation, password update reminders, and ease of password access that are found in the already-available alternatives.
+
+* Responsibilities
+
+  Sam will be handling more of the menu design and user input side of things, including sanitizing inputs, error checking, UX/UI, etc.. Dan will be handling the "back end" of the application, including database calls and the saving process. We will both pair program the security aspects.
+
+* Testing
+
+  We will vet our hashing algorithms through standardized security testing suites. User interface testing will be done mostly manually. 
+
+
+* Coding Standards
+
+  The code will be up to PEP-8 standards.
