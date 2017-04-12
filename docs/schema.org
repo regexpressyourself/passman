@@ -1,18 +1,19 @@
+
 * DB Schema
 Database will be located in the ~/.passman/ folder
 
   #+BEGIN_SRC json
     {
-        _id: 1,
-        name: "encryped name (key=master password)",
-        password: "hashed password",
-        data: [
+        "_id": 1,
+        "name": "encryped name (key=master password)",
+        "password": "hashed password",
+        "data": [
             {
-                _id: 1,
-                service: "encrypted name of service (key=master pw; cannot be duplicate)",
-                servicePassword: "encryped service password (key = master pw)",
-                serviceUrl: "encryped service url (key = master pw)".
-                    serviceUserName: "encryped service username (key = master pw)"
+                "_id": 1,
+                "service": "encrypted name of service (key=master pw; cannot be duplicate)",
+                "servicePassword": "encryped service password (key = master pw)",
+                "serviceUrl": "encryped service url (key = master pw)",
+                "serviceUserName": "encryped service username (key = master pw)"
             }
         ]
     }
