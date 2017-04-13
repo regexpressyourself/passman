@@ -107,3 +107,15 @@ def updateService(oldName, newName, pw, serviceUrl="", serviceUserName=""):
     removeService(oldName)
     addService(newName, pw, serviceUrl, serviceUserName)
 
+def getServiceByName(name):
+    '''
+    Returns a given service for the current user.
+    '''
+
+    service = {}
+    serviceArray = collection.find_one({"name": userName})['data']
+    for serviceDict in serviceArray:
+        if serviceDict["service"] == name:
+            service = serviceDict
+
+    return service

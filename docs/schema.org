@@ -94,6 +94,16 @@
    Return:
    True if successful, False if not
 
+** getServiceByName
+   Returns a service of a given name
+
+   Parameters: 
+   1. name: the name of the service to retrieve
+
+   Return:
+   Dictionary for the service, or empty dictionary if not found
+
+
 
 * Application API
 ** list
