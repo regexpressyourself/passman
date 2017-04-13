@@ -25,6 +25,21 @@ def addUser(name, pw):
         'data': []
         })
 
+    if result: return True
+    else: return False
+
+def getAllServices():
+    '''
+    Returns an array of all the services for the current user.
+
+    Return value contains the data as it is stored in the database. We
+    can run through the array and clean it up a bit too - just need to 
+    see the implementation of our list function in order to do so.
+    '''
+
+    serviceArray = collection.find_one({"name": userName})['data']
+    if serviceArray: return serviceArray
+
 def checkIfServiceExists(name):
     '''
     Checks if a given service name is in the database already.
@@ -43,18 +58,6 @@ def checkIfServiceExists(name):
             found = True
     return found
 
-def getAllServices():
-    '''
-    Returns an array of all the services for the current user.
-
-    Return value contains the data as it is stored in the database. We
-    can run through the array and clean it up a bit too - just need to 
-    see the implementation of our list function in order to do so.
-    '''
-
-    serviceArray = collection.find_one({"name": userName})['data']
-    if serviceArray: return serviceArray
-
 def addService(name, pw, serviceUrl="", serviceUserName=""):
     '''
     Add a service to the document for current user.
@@ -71,9 +74,13 @@ def addService(name, pw, serviceUrl="", serviceUserName=""):
                 'servicePassword': pw,
                 'serviceUrl': serviceUrl,
                 'serviceUserName': serviceUserName
-                }
             }
-            })
+        }
+        })
+
+        if result: return True
+        else: return False
+
     else:
         print("\nERROR: Database already contains service " + name+"\n")
 
@@ -85,12 +92,18 @@ def removeService(name):
     result = collection.find_one_and_update({'name': userName},{'$pop':{
         'data': {
             'service': name
-            }
         }
-        })
+    }})
 
+    if result: return True
+    else: return False
 
-
-
-
+def updateService(oldName, newName, pw, serviceUrl="", serviceUserName=""):
+    '''
+    Updates a service to a new set of data. Be sure to provide the entire
+    fingerprint of the new data, not just what changed. This includes any url,
+    username, etc. even if they have not been changed
+    '''
+    removeService(oldName)
+    addService(newName, pw, serviceUrl, serviceUserName)
 
