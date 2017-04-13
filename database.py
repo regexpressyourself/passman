@@ -9,6 +9,14 @@ collection = db.main_collection
 # TODO get document via username on login
 userName = "Sam"
 
+def existsDuplicateUser(name, pw):
+    user = collection.find_one({"name": name})
+    if (user): return True
+    else: return False
+
+
+
+
 def addUser(name, pw):
     '''
     Adds a user to the database. This should only be called once 
@@ -18,6 +26,9 @@ def addUser(name, pw):
     This function creates a new Mongo 'Document' in the 
     main collection. The Document will contain all user data.
     '''
+
+    if existsDuplicateUser(name, pw):
+        return False
 
     result = collection.insert_one({
         'name': name,

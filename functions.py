@@ -57,4 +57,13 @@ def loginUser():
 
     passwordFile.write(text)
     passwordFile.close()
+def signUpUser():
+    username = getUserInput("Please enter your username\n> ")
+    pw = getUserInput("Please enter your password\n> ", True)
+    pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
+    if addUser(username, pw):
+        return True
+    else:
+        print("Sorry, that username is already taken")
+        signUpUser()
 
