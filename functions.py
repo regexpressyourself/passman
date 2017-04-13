@@ -1,11 +1,14 @@
 #sys to exit
 import sys 
+import hashlib
 
 # getpass for no echo on user input
 from getpass import getpass
 
+from database import checkUserCredentials, addUser
+
 def quit():
-    print("See you later!\n")
+    print("\nSee you later!\n")
     sys.exit()
 
 def getUserInput(prompt, isSecret=False):
@@ -17,6 +20,9 @@ def getUserInput(prompt, isSecret=False):
         return response
     except EOFError:
         quit()
+    except KeyboardInterrupt:
+        quit()
+
 
 def getPasswordFromUser():
     password = getUserInput("Please enter your password:\n", isSecret=True)
@@ -26,9 +32,6 @@ def getServiceFromUser():
     service= getUserInput("What service do you want to use?\n");
     return service
 
-def writeToFile(service, pw):
-    fileName = "./passwords.txt"
-    passwordFile = open(fileName, 'a')
 def repromptLogin():
         print("That doesn't seem to match any of our records...\n")
 
@@ -53,10 +56,7 @@ def loginUser():
     else:
         repromptLogin()
 
-    text = "{:20}{}\n".format(service+':', pw)
 
-    passwordFile.write(text)
-    passwordFile.close()
 def signUpUser():
     username = getUserInput("Please enter your username\n> ")
     pw = getUserInput("Please enter your password\n> ", True)
