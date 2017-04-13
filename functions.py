@@ -67,3 +67,76 @@ def signUpUser():
         print("Sorry, that username is already taken")
         signUpUser()
 
+def handleLogin():
+    print("Do you want to log in or start a new account?\n(Enter the number of your choice)\n")
+    print("(1) Log In")
+    print("(2) Start New Account\n")
+    option = getUserInput("> ")
+    if option == "1":
+        loginUser()
+
+    elif option == "2":
+        signUpUser()
+
+    else:
+        print("Please enter a valid option\n")
+        handleLogin()
+
+def welcomeMessage():
+    print("\n\n")
+    print("##################################################")
+    print("# Welcome to Passman!")
+    print("##################################################\n\n")
+
+def listServicesPrompt():
+    #TODO
+    return True
+def addServicePrompt():
+    #TODO
+    return True
+def removeServicePrompt():
+    #TODO
+    return True
+def editServicePrompt():
+    #TODO
+    return True
+def getPassPrompt():
+    #TODO
+    return True
+def getNamePrompt():
+    #TODO
+    return True
+def getUrlPrompt():
+    #TODO
+    return True
+
+def showMenu():
+    print("What do you want to do?\n")
+    print("(1) List all services")
+    print("(2) Add a new service")
+    print("(3) Remove an existing service")
+    print("(4) Edit and existing service")
+    print("(5) Get password for a service")
+    print("(6) Get username for a service")
+    print("(7) get URL for a service\n")
+
+    option = getUserInput("> ")
+    if option =="1":
+        listServicesPrompt()
+    elif option =="2":
+        addServicePrompt()
+    elif option =="3":
+        removeServicePrompt()
+    elif option =="4":
+        editServicePrompt()
+    elif option =="5":
+        getPassPrompt()
+    elif option =="6":
+        getNamePrompt()
+    elif option =="7":
+        getUrlPrompt()
+    else:
+        print("Didn't get that...\n")
+        showMenu()
+
+
