@@ -2,19 +2,27 @@
 # -*- coding: utf-8 -*-
 
 
+import hashlib
+
 from splash import showSplash
 
-from functions import quit, getServiceFromUser, getPasswordFromUser, writeToFile
+from functions import quit, getServiceFromUser, getPasswordFromUser, \
+    getUserInput, handleLogin, welcomeMessage, showMenu
+
+from database import addUser, getAllServices, checkIfServiceExists, \
+    addService, removeService, updateService, getServiceByName
 
 def main():
+    welcomeMessage()
+    handleLogin()
+
+
     while True:
-        service = getServiceFromUser()
-        pw = getPasswordFromUser()
-        writeToFile(service, pw)
+        showMenu()
 
 
 
 # run the program
-showSplash()
+#showSplash()
 main()
 
