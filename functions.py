@@ -29,6 +29,29 @@ def getServiceFromUser():
 def writeToFile(service, pw):
     fileName = "./passwords.txt"
     passwordFile = open(fileName, 'a')
+def repromptLogin():
+        print("That doesn't seem to match any of our records...\n")
+
+        print("Try again or go back to menu?\n")
+        print("(1) Try Again")
+        print("(2) Main Menu")
+        choice = getUserInput("> ")
+        if choice == "1":
+            loginUser()
+        elif choice == "2":
+            handleLogin()
+        else:
+            print("I didn't recognize that input")
+            repromptLogin()
+
+def loginUser():
+    username = getUserInput("Please enter your username\n> ")
+    pw = getUserInput("Please enter your password\n> ", True)
+    pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
+    if checkUserCredentials(username, pw):
+        return True
+    else:
+        repromptLogin()
 
     text = "{:20}{}\n".format(service+':', pw)
 

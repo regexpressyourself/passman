@@ -28,6 +28,11 @@ def addUser(name, pw):
     if result: return True
     else: return False
 
+def checkUserCredentials(name, pw):
+    user = collection.find_one({"name": name, "password": pw})
+    if (user): return True
+    else: return False
+
 def getAllServices():
     '''
     Returns an array of all the services for the current user.
