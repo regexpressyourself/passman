@@ -1,6 +1,6 @@
 
 * DB Schema
-Database will be located in the ~/.passman/ folder
+  Database will be located in the ~/.passman/ folder
 
   #+BEGIN_SRC json
     {
@@ -19,7 +19,83 @@ Database will be located in the ~/.passman/ folder
     }
   #+END_SRC
 
-* API
+* Database API
+** addUser
+   Adds a new user document to the database.
+
+
+   Parameters:
+   1. name: the name of the new user
+   2. pw: the master password for the new user
+
+
+   Return:
+   True if successful, False if not
+
+** getAllServices
+   Return a list of all services as a dictionary
+
+
+   Parameters: none
+
+
+   Return:
+   The array of dictionaries, each representing a service
+
+** checkIfServiceExists
+   Checks for a duplicate name in the database
+
+
+   Parameters:
+   1. name: the name of the service to check
+
+
+   Return:
+   True if service exists, False if not
+
+** addService
+   Add a service to a user's document
+
+
+   Parameters:
+   1. name: the name of the new service
+   2. pw: the password for the new service
+   3. serviceUrl [optional]: the url of the service. Defaults to "" if not provided
+   4. serviceUserName [optional]: the user name for the new service. Defaults to "" if not provided
+
+
+   Return:
+   True if successful, False if not
+
+** removeService
+   Remove a service from a user's document
+
+
+   Parameters:
+   1. name: the name of the service to remove
+
+
+   Return:
+   True if successful, False if not
+
+** updateService
+   Updates a service to a new set of data. Be sure to provide the entire fingerprint of the new data, not just what changed. This includes any url, username, etc. even if they have not been changed
+
+
+   Parameters:
+   1. oldName: the old name of the service 
+   2. newName: the new name of the service
+   3. pw: the new password for the service
+   4. serviceUrl [optional]: the new url of the service. Defaults to "" if not provided - WILL OVERWRITE EXISTING URL TO "" IF NOT PROVIDED
+   5. serviceUserName [optional]: the new user name for the service. Defaults to "" if not provided - WILL OVERWRITE EXISTING URL TO "" IF NOT PROVIDED
+
+
+
+   Return:
+   True if successful, False if not
+
+
+* Application API
 ** list
    Called from user menu or via:
    #+BEGIN_SRC
