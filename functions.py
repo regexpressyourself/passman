@@ -105,15 +105,30 @@ def listServicesPrompt():
             else:
                 print(service['service'],service['serviceUserName'],service['serviceUrl'],sep='\t')
     return True
-def addServicePrompt():
-    service = getUserInput("Entry name: ")
-    while checkIfServiceExists(service):
-        print("Service already exists.")
+def addServicePrompt(name="",usname=""):
+    if name=="":
         service = getUserInput("Entry name: ")
+        while checkIfServiceExists(service):
+            print("Service already exists.")
+            service = getUserInput("Entry name: ")
+    elif uname=="":
+        if checkIfServiceExists(name):
+            print("Service already exists.")
+            return False;
+        else:
+            service = name
+    else:
+        if checkIfServiceExists(name):
+            print("Service already exists.")
+            return False;
+        else:
+            service = name
+            uname = usname
     password = getUserInput("Password [leave blank to generate]: ")
     if password == "":
         generatePasswordPrompt()
-    uname=getUserInput("Service Username: ")
+    if uname=="":
+        uname=getUserInput("Service Username: ")
     url=getUserInput("Service URL: ")
 
     return addService(service, password, url, uname)
