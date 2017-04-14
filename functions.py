@@ -1,11 +1,11 @@
 #sys to exit
-import sys 
+import sys
 import hashlib
 
 # getpass for no echo on user input
 from getpass import getpass
 
-from database import checkUserCredentials, addUser
+from database import checkUserCredentials, addUser, getAllServices, addService, checkIfServiceExists
 
 def quit():
     print("\nSee you later!\n")
@@ -90,10 +90,20 @@ def welcomeMessage():
 
 def listServicesPrompt():
     #TODO
+    print(getAllServices())
     return True
 def addServicePrompt():
-    #TODO
-    return True
+    service = getUserInput("Entry name: ")
+    while checkIfServiceExists(service):
+        print("Service already exists.")
+        service = getUserInput("Entry name: ")
+    password = getUserInput("Password [leave blank to generate]: ")
+    #if password == "":
+        #TODO implemnt generator
+    uname=getUserInput("Service Username: ")
+    url=getUserInput("Service URL: ")
+
+    return addService(service, password, url, uname)
 def removeServicePrompt():
     #TODO
     return True
@@ -138,5 +148,3 @@ def showMenu():
     else:
         print("Didn't get that...\n")
         showMenu()
-
-
