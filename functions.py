@@ -5,7 +5,7 @@ import hashlib
 # getpass for no echo on user input
 from getpass import getpass
 
-from database import checkUserCredentials, addUser, getAllServices, addService, checkIfServiceExists
+from database import checkUserCredentials, addUser, getAllServices, addService, checkIfServiceExists, removeService
 
 def quit():
     print("\nSee you later!\n")
@@ -88,6 +88,9 @@ def welcomeMessage():
     print("# Welcome to Passman!")
     print("##################################################\n\n")
 
+def generatePasswordPrompt():
+    #TODO
+
 def listServicesPrompt():
     #TODO
     print(getAllServices())
@@ -98,15 +101,18 @@ def addServicePrompt():
         print("Service already exists.")
         service = getUserInput("Entry name: ")
     password = getUserInput("Password [leave blank to generate]: ")
-    #if password == "":
-        #TODO implemnt generator
+    if password == "":
+        generatePasswordPrompt()
     uname=getUserInput("Service Username: ")
     url=getUserInput("Service URL: ")
 
     return addService(service, password, url, uname)
 def removeServicePrompt():
-    #TODO
-    return True
+    service = getUserInput("Enter service to be deleted: ")
+    while not checkIfServiceExists(service):
+        print("Service not found.")
+        service = getUserInput("Enter service to be deleted: ")
+    return removeService(service)
 def editServicePrompt():
     #TODO
     return True
