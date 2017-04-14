@@ -107,39 +107,41 @@ def listServicesPrompt():
             else:
                 print(service['service'],service['serviceUserName'],service['serviceUrl'],sep='\t')
     return True
-def addServicePrompt(name="",usname=""):
-    if name=="":
-        service = getUserInput("Entry name: ")
-        while checkIfServiceExists(service):
-            print("Service already exists.")
-            service = getUserInput("Entry name: ")
-    elif uname=="":
+def addServicePrompt(name="",usname="",url=""):
+    if not usname == "":
         if checkIfServiceExists(name):
             print("Service already exists.")
-            return False;
-        else:
-            service = name
+            return False
+    elif not name=="":
+        if checkIfServiceExists(name):
+            print("Service already exists.")
+            return False
+        usname = getUserInput("Username: ")
     else:
+        name=getUserInput("Entry name: ")
         if checkIfServiceExists(name):
             print("Service already exists.")
-            return False;
+            return False
         else:
-            service = name
-            uname = usname
+            usname = getUserInput("Enter username: ")
+
     password = getUserInput("Password [leave blank to generate]: ", True)
     if password == "":
         generatePasswordPrompt()
-    if uname=="":
-        uname=getUserInput("Service Username: ")
     url=getUserInput("Service URL: ")
 
-    return addService(service, password, url, uname)
-def removeServicePrompt():
-    service = getUserInput("Enter service to be deleted: ")
-    while not checkIfServiceExists(service):
-        print("Service not found.")
-        service = getUserInput("Enter service to be deleted: ")
-    service = getServiceByName(service)
+    return addService(name, password, url, usname)
+def removeServicePrompt(sname=""):
+    if sname=="":
+        sname = getUserInput("Enter service to be deleted: ")
+        while not checkIfServiceExists(sname):
+            print("Service not found.")
+            sname = getUserInput("Enter service to be deleted: ")
+    else:
+        if not checkIfServiceExists(sname):
+            print("Service not found.")
+            return False
+    service = getServiceByName(sname)
     print("Delete ",service['service'],". This cannot be undone.",sep="")
     confirm = getUserInput("Are you sure? (y/N)")
     if confirm == "y" or confirm =="Y":
@@ -162,14 +164,11 @@ def getPassPrompt(sname=""):
         while not checkIfServiceExists(sname):
             print("Service not found.")
             sname = getUserInput("Enter service name: ")
-        service = getServiceByName(sname)
     else:
-        if checkIfServiceExists(sname):
-            service = getServiceByName(sname)
-        else:
+        if not checkIfServiceExists(sname):
             print("Service not found.")
             return False
-
+    service = getServiceByName(sname)
     pyperclip.copy(service['serviceUserName'])
     print("Copied to clipboard")
     time.sleep(20)
@@ -182,14 +181,11 @@ def getNamePrompt(sname=""):
         while not checkIfServiceExists(sname):
             print("Service not found.")
             sname = getUserInput("Enter service name: ")
-        service = getServiceByName(sname)
     else:
-        if checkIfServiceExists(sname):
-            service = getServiceByName(sname)
-        else:
+        if not checkIfServiceExists(sname):
             print("Service not found.")
             return False
-
+    service = getServiceByName(sname)
     pyperclip.copy(service['serviceUserName'])
     print("Copied to clipboard")
     print(service['serviceUserName'])
