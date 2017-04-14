@@ -1,6 +1,8 @@
 #sys to exit
 import sys
 import hashlib
+import pyperclip
+import time
 
 # getpass for no echo on user input
 from getpass import getpass
@@ -157,8 +159,23 @@ def editServicePrompt():
 def getPassPrompt():
     #TODO
     return True
-def getNamePrompt():
-    #TODO
+def getNamePrompt(sname=""):
+    if sname=="":
+        sname = getUserInput("Enter service name: ")
+        while not checkIfServiceExists(sname):
+            print("Service not found.")
+            sname = getUserInput("Enter service name: ")
+        service = getServiceByName(sname)
+    else:
+        if checkIfServiceExists(sname):
+            service = getServiceByName(sname)
+
+    pyperclip.copy(service['serviceUserName'])
+    print("Copied to clipboard")
+    print(service['serviceUserName'])
+    time.sleep(20)
+    pyperclip.copy("")
+    print("Clipboard cleared")
     return True
 def getUrlPrompt():
     #TODO
