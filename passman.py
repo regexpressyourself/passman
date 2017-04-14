@@ -15,6 +15,8 @@ from database import addUser, getAllServices, checkIfServiceExists, \
     addService, removeService, updateService, getServiceByName
 
 def main():
+    if len(sys.argv)>1 and not isOption(sys.argv[1]):
+        printUsage()
     welcomeMessage()
     handleLogin()
 
