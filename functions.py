@@ -5,7 +5,7 @@ import hashlib
 # getpass for no echo on user input
 from getpass import getpass
 
-from database import checkUserCredentials, addUser, getAllServices, addService, checkIfServiceExists, removeService
+from database import checkUserCredentials, addUser, getAllServices, addService, checkIfServiceExists, removeService, getServiceByName
 
 def quit():
     print("\nSee you later!\n")
@@ -137,7 +137,20 @@ def removeServicePrompt():
     while not checkIfServiceExists(service):
         print("Service not found.")
         service = getUserInput("Enter service to be deleted: ")
-    return removeService(service)
+    service = getServiceByName(service)
+    print("Delete ",service['service'],". This cannot be undone.",sep="")
+    confirm = getUserInput("Are you sure? (y/N)")
+    if confirm == "y" or confirm =="Y":
+        servname = service['service']
+        success = removeService(service)
+        if success:
+            print(servname,"successfully deleted.")
+        else:
+            print("Remove failed, unknown error occured.")
+    else:
+        print("Aborting")
+        success = False
+    return success
 def editServicePrompt():
     #TODO
     return True
