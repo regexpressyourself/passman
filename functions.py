@@ -90,10 +90,20 @@ def welcomeMessage():
 
 def generatePasswordPrompt():
     #TODO
+    print("todo")
 
 def listServicesPrompt():
-    #TODO
-    print(getAllServices())
+    for service in getAllServices():
+        if service['serviceUserName'] == "":
+            if service['serviceUrl'] == "":
+                print(service['service'])
+            else:
+                print(service['service'],service['serviceUrl'],sep='\t')
+        else:
+            if service['serviceUrl'] == "":
+                print(service['service'],"-",service['serviceUserName'],sep='\t')
+            else:
+                print(service['service'],service['serviceUserName'],service['serviceUrl'],sep='\t')
     return True
 def addServicePrompt():
     service = getUserInput("Entry name: ")
