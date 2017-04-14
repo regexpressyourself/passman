@@ -126,7 +126,7 @@ def addServicePrompt(name="",usname=""):
         else:
             service = name
             uname = usname
-    password = getUserInput("Password [leave blank to generate]: ")
+    password = getUserInput("Password [leave blank to generate]: ", True)
     if password == "":
         generatePasswordPrompt()
     if uname=="":
@@ -157,7 +157,24 @@ def editServicePrompt():
     #TODO
     return True
 def getPassPrompt():
-    #TODO
+    if sname=="":
+        sname = getUserInput("Enter service name: ")
+        while not checkIfServiceExists(sname):
+            print("Service not found.")
+            sname = getUserInput("Enter service name: ")
+        service = getServiceByName(sname)
+    else:
+        if checkIfServiceExists(sname):
+            service = getServiceByName(sname)
+        else:
+            print("Service not found.")
+            return False
+
+    pyperclip.copy(service['serviceUserName'])
+    print("Copied to clipboard")
+    time.sleep(20)
+    pyperclip.copy("")
+    print("Clipboard cleared")
     return True
 def getNamePrompt(sname=""):
     if sname=="":
@@ -169,6 +186,9 @@ def getNamePrompt(sname=""):
     else:
         if checkIfServiceExists(sname):
             service = getServiceByName(sname)
+        else:
+            print("Service not found.")
+            return False
 
     pyperclip.copy(service['serviceUserName'])
     print("Copied to clipboard")
@@ -187,6 +207,9 @@ def getUrlPrompt(sname):
     else:
         if checkIfServiceExists(sname):
             service = getServiceByName(sname)
+        else:
+            print("Service not found.")
+            return False
 
     pyperclip.copy(service['serviceUrl'])
     print("Copied to clipboard")
