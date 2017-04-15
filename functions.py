@@ -3,11 +3,17 @@ import sys
 import hashlib
 import pyperclip
 import time
+import base64
+from Crypto import Random
+from Crypto.Cipher import AES
 
 # getpass for no echo on user input
 from getpass import getpass
 
 from database import checkUserCredentials, addUser, getAllServices, addService, checkIfServiceExists, removeService, getServiceByName, setDBUsername
+
+key=None
+bs = 32
 
 def quit():
     print("\nSee you later!\n")
@@ -24,7 +30,6 @@ def getUserInput(prompt, isSecret=False):
         quit()
     except KeyboardInterrupt:
         quit()
-
 
 def getPasswordFromUser():
     password = getUserInput("Please enter your password:\n", isSecret=True)
@@ -55,6 +60,8 @@ def loginUser():
     pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
     if checkUserCredentials(username, pw):
         setDBUsername(username)
+        global key
+        key=hashlib.sha256(pw.encode()).digest()
         return True
     else:
         repromptLogin()
@@ -131,7 +138,7 @@ def addServicePrompt(name="",usname="",url=""):
         generatePasswordPrompt()
     url=getUserInput("Service URL: ")
 
-    return addService(name, password, url, usname)
+    return addService(name, encrypt(password), url, usname)
 def removeServicePrompt(sname=""):
     if sname=="":
         sname = getUserInput("Enter service to be deleted: ")
@@ -170,7 +177,7 @@ def getPassPrompt(sname=""):
             print("Service not found.")
             return False
     service = getServiceByName(sname)
-    pyperclip.copy(service['serviceUserName'])
+    pyperclip.copy(decrypt(service['servicePassword']))
     print("Copied to clipboard")
     time.sleep(20)
     pyperclip.copy("")
@@ -226,6 +233,23 @@ def isOption(arg):
     else:
         return False
 
+def encrypt(raw):
+    raw = pad(raw)
+    iv = Random.new().read(AES.block_size)
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    return base64.b64encode(iv + cipher.encrypt(raw))
+
+def decrypt(enc):
+    enc = base64.b64decode(enc)
+    iv = enc[:AES.block_size]
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    return unpad(cipher.decrypt(enc[AES.block_size:])).decode('utf-8')
+
+def pad(s):
+    return s + (bs - len(s) % bs) * chr(bs - len(s) % bs)
+
+def unpad(s):
+    return s[:-ord(s[len(s)-1:])]
 
 def showMenu():
     print("What do you want to do?\n")
