@@ -6,8 +6,11 @@ db = client.passman
 
 collection = db.main_collection
 
-# TODO get document via username on login
-userName = "Sam"
+userName = ""
+
+def setDBUsername(username):
+    global userName 
+    userName = username
 
 def existsDuplicateUser(name, pw):
     user = collection.find_one({"name": name})
