@@ -102,25 +102,16 @@ def listServicesPrompt():
     print('{:20}{:20}'.format('Service/URL', 'Username'))
     print('-------------------------------------')
     serviceArray = getAllServices()
+
     if not serviceArray:
         serviceArray = []
         print("No services to show!\n")
 
     for service in serviceArray:
-        serviceUserName = service['serviceUserName']
-        serviceUrl = service['serviceUrl']
-        service = service['service']
-
-        if serviceUserName == "":
-            if serviceUrl == "":
-                print(service+'\n')
-            else:
-                print('{:20}\n{:20}\n'.format(service,serviceUrl))
-        else:
-            if serviceUrl == "":
-                print('{:20}{:20}\n'.format(service,serviceUserName))
-            else:
-                print('{:20}{:20}\n{:20}\n'.format(service,serviceUserName,serviceUrl))
+        print('{:20}{:20}\n{:20}\n'.format(\
+                service['service'],\
+                service['serviceUserName'],\
+                service['serviceUrl']))
     return True
 
 def addServicePrompt(name="",usname="",url=""):
