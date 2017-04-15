@@ -172,9 +172,11 @@ def removeServicePrompt(sname=""):
         print("Aborting")
         success = False
     return success
+
 def editServicePrompt():
     #TODO
     return True
+
 def getPassPrompt(sname=""):
     if sname=="":
         sname = getUserInput("Enter service name: ")
