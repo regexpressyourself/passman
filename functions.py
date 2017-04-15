@@ -20,11 +20,13 @@ def quit():
     sys.exit()
 
 def getUserInput(prompt, isSecret=False):
+    print(prompt)
     try:
         if (isSecret):
-            response = getpass(prompt)
+            response = getpass("> ")
         else:
-            response = input(prompt)
+            response = input("> " )
+        print()
         return response
     except EOFError:
         quit()
@@ -40,23 +42,22 @@ def getServiceFromUser():
     return service
 
 def repromptLogin():
-        print("That doesn't seem to match any of our records...\n")
-
-        print("Try again or go back to menu?\n")
-        print("(1) Try Again")
-        print("(2) Main Menu")
-        choice = getUserInput("> ")
-        if choice == "1":
-            loginUser()
-        elif choice == "2":
-            handleLogin()
-        else:
-            print("I didn't recognize that input")
-            repromptLogin()
+    print("That doesn't seem to match any of our records...\n")
+    nextPrompt = "Try again or go back to menu?\n\n" \
+            + "(1) Try Again\n" \
+            + "(2) Main Menu"
+    choice = getUserInput(nextPrompt)
+    if choice == "1":
+        loginUser()
+    elif choice == "2":
+        handleLogin()
+    else:
+        print("I didn't recognize that input")
+        repromptLogin()
 
 def loginUser():
-    username = getUserInput("Please enter your username\n> ")
-    pw = getUserInput("Please enter your password\n> ", True)
+    username = getUserInput("Please enter your username")
+    pw = getUserInput("Please enter your password", True)
     pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
     if checkUserCredentials(username, pw):
         setDBUsername(username)
@@ -68,8 +69,8 @@ def loginUser():
 
 
 def signUpUser():
-    username = getUserInput("Please enter your username\n> ")
-    pw = getUserInput("Please enter your password\n> ", True)
+    username = getUserInput("Please enter your username")
+    pw = getUserInput("Please enter your password", True)
     pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
     if addUser(username, pw):
         return True
@@ -78,10 +79,11 @@ def signUpUser():
         signUpUser()
 
 def handleLogin():
-    print("Do you want to log in or start a new account?\n(Enter the number of your choice)\n")
-    print("(1) Log In")
-    print("(2) Start New Account\n")
-    option = getUserInput("> ")
+    prompt = "Do you want to log in or start a new account?\n"\
+            + "(Enter the number of your choice)\n\n" \
+            + "(1) Log In\n"\
+            + "(2) Start New Account\n"
+    option = getUserInput(prompt)
     if option == "1":
         loginUser()
 
@@ -103,18 +105,22 @@ def generatePasswordPrompt():
     print("todo")
 
 def listServicesPrompt():
-    for service in getAllServices():
-        if service['serviceUserName'] == "":
-            if service['serviceUrl'] == "":
-                print(service['service'])
-            else:
-                print(service['service'],service['serviceUrl'],sep='\t')
-        else:
-            if service['serviceUrl'] == "":
-                print(service['service'],"-",service['serviceUserName'],sep='\t')
-            else:
-                print(service['service'],service['serviceUserName'],service['serviceUrl'],sep='\t')
+
+    print('{:20}{:20}'.format('Service/URL', 'Username'))
+    print('-------------------------------------')
+    serviceArray = getAllServices()
+
+    if not serviceArray:
+        serviceArray = []
+        print("No services to show!\n")
+
+    for service in serviceArray:
+        print('{:20}{:20}\n{:20}\n'.format(\
+                service['service'],\
+                service['serviceUserName'],\
+                service['serviceUrl']))
     return True
+
 def addServicePrompt(name="",usname="",url=""):
     if not usname == "":
         if checkIfServiceExists(name):
@@ -138,7 +144,10 @@ def addServicePrompt(name="",usname="",url=""):
         generatePasswordPrompt()
     url=getUserInput("Service URL: ")
 
-    return addService(name, encrypt(password), url, usname)
+    result = addService(name, encrypt(password), url, usname)
+    if result: return True
+    else: return False
+
 def removeServicePrompt(sname=""):
     if sname=="":
         sname = getUserInput("Enter service to be deleted: ")
@@ -154,7 +163,7 @@ def removeServicePrompt(sname=""):
     confirm = getUserInput("Are you sure? (y/N)")
     if confirm == "y" or confirm =="Y":
         servname = service['service']
-        success = removeService(service)
+        success = removeService(service['service'])
         if success:
             print(servname,"successfully deleted.")
         else:
@@ -163,9 +172,11 @@ def removeServicePrompt(sname=""):
         print("Aborting")
         success = False
     return success
+
 def editServicePrompt():
     #TODO
     return True
+
 def getPassPrompt(sname=""):
     if sname=="":
         sname = getUserInput("Enter service name: ")

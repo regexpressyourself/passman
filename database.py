@@ -1,6 +1,6 @@
 from pymongo import MongoClient
-
-client = MongoClient()
+# need to pull this from an environment variable
+client = MongoClient('mongodb://passman:passman@ds161640.mlab.com:61640/passman')
 
 db = client.passman
 
@@ -56,8 +56,10 @@ def getAllServices():
     see the implementation of our list function in order to do so.
     '''
 
-    serviceArray = collection.find_one({"name": userName})['data']
+    serviceArray = collection.find_one({"name": userName})
+    serviceArray = serviceArray['data'] if serviceArray else serviceArray
     if serviceArray: return serviceArray
+    else: return False
 
 def checkIfServiceExists(name):
     '''
@@ -108,11 +110,8 @@ def removeService(name):
     Remove a service from an account.
     '''
 
-    result = collection.find_one_and_update({'name': userName},{'$pop':{
-        'data': {
-            'service': name
-        }
-    }})
+    result = collection.update({'name': userName},
+            {'$pull':{ 'data': {'service' : name}}})
 
     if result: return True
     else: return False
@@ -130,9 +129,8 @@ def getServiceByName(name):
     '''
     Returns a given service for the current user.
     '''
+    serviceArray = getAllServices()
 
-    service = {}
-    serviceArray = collection.find_one({"name": userName})['data']
     for serviceDict in serviceArray:
         if serviceDict["service"] == name:
             service = serviceDict
