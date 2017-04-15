@@ -28,6 +28,8 @@ def main():
                 addServicePrompt(sys.argv[2])
             elif len(sys.argv==4):
                 addServicePrompt(sys.argv[2],sys.argv[3])
+            elif len(sys.argv==5):
+                addServicePrompt(sys.argv[2],sys.argv[3],sys.argv[4])
             else:
                 printUsage()
 
