@@ -204,7 +204,7 @@ def getNamePrompt(sname=""):
     pyperclip.copy("")
     print("Clipboard cleared")
     return True
-def getUrlPrompt(sname):
+def getUrlPrompt(sname=""):
     if sname=="":
         sname = getUserInput("Enter service name: ")
         while not checkIfServiceExists(sname):
@@ -221,9 +221,6 @@ def getUrlPrompt(sname):
     pyperclip.copy(service['serviceUrl'])
     print("Copied to clipboard")
     print(service['serviceUrl'])
-    time.sleep(20)
-    pyperclip.copy("")
-    print("Clipboard cleared")
     return True
 
 def printUsage():
