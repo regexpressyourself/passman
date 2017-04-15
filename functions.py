@@ -263,16 +263,16 @@ def unpad(s):
     return s[:-ord(s[len(s)-1:])]
 
 def showMenu():
-    print("What do you want to do?\n")
-    print("(1) List all services")
-    print("(2) Add a new service")
-    print("(3) Remove an existing service")
-    print("(4) Edit and existing service")
-    print("(5) Get password for a service")
-    print("(6) Get username for a service")
-    print("(7) get URL for a service\n")
+    prompt = "What do you want to do?\n\n" \
+    + "(1) List all services\n" \
+    + "(2) Add a new service\n" \
+    + "(3) Remove an existing service\n" \
+    + "(4) Edit and existing service\n" \
+    + "(5) Get password for a service\n" \
+    + "(6) Get username for a service\n" \
+    + "(7) get URL for a service\n\n"
 
-    option = getUserInput("> ")
+    option = getUserInput(prompt)
     if option =="1":
         listServicesPrompt()
     elif option =="2":
