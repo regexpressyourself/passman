@@ -7,7 +7,7 @@ import time
 # getpass for no echo on user input
 from getpass import getpass
 
-from database import checkUserCredentials, addUser, getAllServices, addService, checkIfServiceExists, removeService, getServiceByName
+from database import checkUserCredentials, addUser, getAllServices, addService, checkIfServiceExists, removeService, getServiceByName, setDBUsername
 
 def quit():
     print("\nSee you later!\n")
@@ -54,6 +54,7 @@ def loginUser():
     pw = getUserInput("Please enter your password\n> ", True)
     pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
     if checkUserCredentials(username, pw):
+        setDBUsername(username)
         return True
     else:
         repromptLogin()
