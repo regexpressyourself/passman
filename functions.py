@@ -58,8 +58,8 @@ def repromptLogin():
 def loginUser():
     username = getUserInput("Please enter your username")
     pw = getUserInput("Please enter your password", True)
-    pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
-    if checkUserCredentials(username, pw):
+    hsh = hashlib.sha512(pw.encode('utf-8')).hexdigest()
+    if checkUserCredentials(username, hsh):
         setDBUsername(username)
         global key
         key=hashlib.sha256(pw.encode()).digest()
