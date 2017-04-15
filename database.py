@@ -110,11 +110,8 @@ def removeService(name):
     Remove a service from an account.
     '''
 
-    result = collection.find_one_and_update({'name': userName},{'$pop':{
-        'data': {
-            'service': name
-        }
-    }})
+    result = collection.update({'name': userName},
+            {'$pull':{ 'data': newServiceArray}})
 
     if result: return True
     else: return False
