@@ -163,7 +163,7 @@ def removeServicePrompt(sname=""):
     confirm = getUserInput("Are you sure? (y/N)")
     if confirm == "y" or confirm =="Y":
         servname = service['service']
-        success = removeService(service)
+        success = removeService(service['service'])
         if success:
             print(servname,"successfully deleted.")
         else:
