@@ -111,7 +111,7 @@ def removeService(name):
     '''
 
     result = collection.update({'name': userName},
-            {'$pull':{ 'data': newServiceArray}})
+            {'$pull':{ 'data': {'service' : name}}})
 
     if result: return True
     else: return False
