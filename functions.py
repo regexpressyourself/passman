@@ -14,11 +14,13 @@ def quit():
     sys.exit()
 
 def getUserInput(prompt, isSecret=False):
+    print(prompt)
     try:
         if (isSecret):
-            response = getpass(prompt)
+            response = getpass("> ")
         else:
-            response = input(prompt)
+            response = input("> " )
+        print()
         return response
     except EOFError:
         quit()
@@ -35,23 +37,22 @@ def getServiceFromUser():
     return service
 
 def repromptLogin():
-        print("That doesn't seem to match any of our records...\n")
-
-        print("Try again or go back to menu?\n")
-        print("(1) Try Again")
-        print("(2) Main Menu")
-        choice = getUserInput("> ")
-        if choice == "1":
-            loginUser()
-        elif choice == "2":
-            handleLogin()
-        else:
-            print("I didn't recognize that input")
-            repromptLogin()
+    print("That doesn't seem to match any of our records...\n")
+    nextPrompt = "Try again or go back to menu?\n\n" \
+            + "(1) Try Again\n" \
+            + "(2) Main Menu"
+    choice = getUserInput(nextPrompt)
+    if choice == "1":
+        loginUser()
+    elif choice == "2":
+        handleLogin()
+    else:
+        print("I didn't recognize that input")
+        repromptLogin()
 
 def loginUser():
-    username = getUserInput("Please enter your username\n> ")
-    pw = getUserInput("Please enter your password\n> ", True)
+    username = getUserInput("Please enter your username")
+    pw = getUserInput("Please enter your password", True)
     pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
     if checkUserCredentials(username, pw):
         setDBUsername(username)
@@ -61,8 +62,8 @@ def loginUser():
 
 
 def signUpUser():
-    username = getUserInput("Please enter your username\n> ")
-    pw = getUserInput("Please enter your password\n> ", True)
+    username = getUserInput("Please enter your username")
+    pw = getUserInput("Please enter your password", True)
     pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
     if addUser(username, pw):
         return True
@@ -71,10 +72,11 @@ def signUpUser():
         signUpUser()
 
 def handleLogin():
-    print("Do you want to log in or start a new account?\n(Enter the number of your choice)\n")
-    print("(1) Log In")
-    print("(2) Start New Account\n")
-    option = getUserInput("> ")
+    prompt = "Do you want to log in or start a new account?\n"\
+            + "(Enter the number of your choice)\n\n" \
+            + "(1) Log In\n"\
+            + "(2) Start New Account\n"
+    option = getUserInput(prompt)
     if option == "1":
         loginUser()
 
