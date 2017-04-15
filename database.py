@@ -1,6 +1,6 @@
 from pymongo import MongoClient
-
-client = MongoClient()
+# need to pull this from an environment variable
+client = MongoClient('mongodb://passman:passman@ds161640.mlab.com:61640/passman')
 
 db = client.passman
 
