@@ -144,7 +144,10 @@ def addServicePrompt(name="",usname="",url=""):
         generatePasswordPrompt()
     url=getUserInput("Service URL: ")
 
-    return addService(name, password, url, usname)
+    result = addService(name, password, url, usname)
+    if result: return True
+    else: return False
+
 def removeServicePrompt(sname=""):
     if sname=="":
         sname = getUserInput("Enter service to be deleted: ")
