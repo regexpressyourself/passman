@@ -1,12 +1,12 @@
-#sys to exit
 import sys
-import pyperclip
 import time
-
 # getpass for no echo on user input
 from getpass import getpass
+import pyperclip
 
-from database import checkUserCredentials, addUser, addService, checkIfServiceExists, removeService, getServiceByName, setDBUsername, getServiceData, getAllServiceNames
+from database import checkUserCredentials, addUser, addService,\
+        checkIfServiceExists, removeService, \
+        setDBUsername, getServiceData, getAllServiceNames
 
 
 def quit():
@@ -121,7 +121,6 @@ def addServicePrompt(name="",usname="",url=""):
     usname = usname if usname else getUserInput("Username: ")
 
     password = getUserInput("Password [leave blank to generate]: ", True)
-
     if password == "":
         generatePasswordPrompt()
 

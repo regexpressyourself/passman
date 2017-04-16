@@ -5,12 +5,9 @@ import sys
 
 from splash import showSplash
 
-from functions import quit, getServiceFromUser, getPasswordFromUser, \
-    getUserInput, handleLogin, welcomeMessage, showMenu, listServicesPrompt, \
-    addServicePrompt, getNamePrompt, getUrlPrompt, isOption, printUsage \
-
-from database import addUser, getAllServices, checkIfServiceExists, \
-    addService, removeService, updateService, getServiceByName
+from functions import handleLogin, welcomeMessage, showMenu
+from commandline import handleCLArgs
+from menu import showMenu
 
 def main():
     if len(sys.argv)>1 and not isOption(sys.argv[1]):
