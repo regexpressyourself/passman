@@ -1,19 +1,13 @@
 #sys to exit
 import sys
-import hashlib
 import pyperclip
 import time
-import base64
-from Crypto import Random
-from Crypto.Cipher import AES
 
 # getpass for no echo on user input
 from getpass import getpass
 
-from database import checkUserCredentials, addUser, getAllServices, addService, checkIfServiceExists, removeService, getServiceByName, setDBUsername
+from database import checkUserCredentials, addUser, addService, checkIfServiceExists, removeService, getServiceByName, setDBUsername, getServiceData, getAllServiceNames
 
-key=None
-bs = 32
 
 def quit():
     print("\nSee you later!\n")
@@ -58,11 +52,8 @@ def repromptLogin():
 def loginUser():
     username = getUserInput("Please enter your username")
     pw = getUserInput("Please enter your password", True)
-    hsh = hashlib.sha512(pw.encode('utf-8')).hexdigest()
-    if checkUserCredentials(username, hsh):
-        setDBUsername(username)
-        global key
-        key=hashlib.sha256(pw.encode()).digest()
+    if checkUserCredentials(username, pw):
+        setDBUsername(username,pw)
         return True
     else:
         repromptLogin()
@@ -71,7 +62,6 @@ def loginUser():
 def signUpUser():
     username = getUserInput("Please enter your username")
     pw = getUserInput("Please enter your password", True)
-    pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
     if addUser(username, pw):
         return True
     else:
@@ -108,7 +98,7 @@ def listServicesPrompt():
 
     print('{:20}{:20}'.format('Service/URL', 'Username'))
     print('-------------------------------------')
-    serviceArray = getAllServices()
+    serviceArray = getAllServiceNames()
 
     if not serviceArray:
         serviceArray = []
@@ -116,49 +106,43 @@ def listServicesPrompt():
 
     for service in serviceArray:
         print('{:20}{:20}\n{:20}\n'.format(\
-                service['service'],\
-                service['serviceUserName'],\
-                service['serviceUrl']))
+                service,\
+                getServiceData(service,'serviceUserName'),\
+                getServiceData(service,'serviceUrl')))
     return True
 
-def addServicePrompt():
+def addServicePrompt(name="",usname="",url=""):
 
-    name = getUserInput("Service name: ")
-
-    while (checkIfServiceExists(name)):
+    name = name if name else getUserInput("Service name: ")
+    if checkIfServiceExists(name):
         print("Service already exists.")
-        name = getUserInput("Service name: ")
+        return False
 
-    usname = getUserInput("Username: ")
+    usname = usname if usname else getUserInput("Username: ")
+
     password = getUserInput("Password [leave blank to generate]: ", True)
 
     if password == "":
         generatePasswordPrompt()
 
-    url = getUserInput("Service URL: ")
+    url = url if url else getUserInput("Service URL: ")
 
-    result = addService(name, encrypt(password), url, usname)
+    result = addService(name, password, url, usname)
     if result: return True
     else: return False
 
 def removeServicePrompt(sname=""):
-    if sname=="":
-        sname = getUserInput("Enter service to be deleted: ")
-        while not checkIfServiceExists(sname):
-            print("Service not found.")
-            sname = getUserInput("Enter service to be deleted: ")
-    else:
-        if not checkIfServiceExists(sname):
-            print("Service not found.")
-            return False
-    service = getServiceByName(sname)
-    print("Delete ",service['service'],". This cannot be undone.",sep="")
+    sname = sname if sname else getUserInput("Enter service to be deleted: ")
+    if not checkIfServiceExists(sname):
+        print("Service not found.")
+        return False
+
+    print("Delete ",sname,". This cannot be undone.",sep="")
     confirm = getUserInput("Are you sure? (y/N)")
     if confirm == "y" or confirm =="Y":
-        servname = service['service']
-        success = removeService(service['service'])
+        success = removeService(sname)
         if success:
-            print(servname,"successfully deleted.")
+            print(sname,"successfully deleted.")
         else:
             print("Remove failed, unknown error occured.")
     else:
@@ -180,8 +164,7 @@ def getPassPrompt(sname=""):
         if not checkIfServiceExists(sname):
             print("Service not found.")
             return False
-    service = getServiceByName(sname)
-    pyperclip.copy(decrypt(service['servicePassword']))
+    pyperclip.copy(getServiceData(sname, 'servicePassword'))
     print("Copied to clipboard")
     time.sleep(20)
     pyperclip.copy("")
@@ -197,31 +180,27 @@ def getNamePrompt(sname=""):
         if not checkIfServiceExists(sname):
             print("Service not found.")
             return False
-    service = getServiceByName(sname)
-    pyperclip.copy(service['serviceUserName'])
+    pyperclip.copy(getServiceData(sname,'serviceUserName'))
     print("Copied to clipboard")
-    print(service['serviceUserName'])
+    print(getServiceData(sname,'serviceUserName'))
     time.sleep(20)
     pyperclip.copy("")
     print("Clipboard cleared")
     return True
-def getUrlPrompt(sname):
+def getUrlPrompt(sname=""):
     if sname=="":
         sname = getUserInput("Enter service name: ")
         while not checkIfServiceExists(sname):
             print("Service not found.")
             sname = getUserInput("Enter service name: ")
-        service = getServiceByName(sname)
     else:
-        if checkIfServiceExists(sname):
-            service = getServiceByName(sname)
-        else:
+        if not checkIfServiceExists(sname):
             print("Service not found.")
             return False
 
-    pyperclip.copy(service['serviceUrl'])
+    pyperclip.copy(getServiceData(sname,'serviceUrl'))
     print("Copied to clipboard")
-    print(service['serviceUrl'])
+    print(getServiceData(sname,'serviceUrl'))
     time.sleep(20)
     pyperclip.copy("")
     print("Clipboard cleared")
@@ -237,30 +216,12 @@ def isOption(arg):
     else:
         return False
 
-def encrypt(raw):
-    raw = pad(raw)
-    iv = Random.new().read(AES.block_size)
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    return base64.b64encode(iv + cipher.encrypt(raw))
-
-def decrypt(enc):
-    enc = base64.b64decode(enc)
-    iv = enc[:AES.block_size]
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    return unpad(cipher.decrypt(enc[AES.block_size:])).decode('utf-8')
-
-def pad(s):
-    return s + (bs - len(s) % bs) * chr(bs - len(s) % bs)
-
-def unpad(s):
-    return s[:-ord(s[len(s)-1:])]
-
 def showMenu():
     prompt = "What do you want to do?\n\n" \
     + "(1) List all services\n" \
     + "(2) Add a new service\n" \
     + "(3) Remove an existing service\n" \
-    + "(4) Edit and existing service\n" \
+    + "(4) Edit an existing service\n" \
     + "(5) Get password for a service\n" \
     + "(6) Get username for a service\n" \
     + "(7) get URL for a service\n\n"

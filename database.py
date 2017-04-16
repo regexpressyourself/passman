@@ -1,4 +1,8 @@
 from pymongo import MongoClient
+import base64
+import hashlib
+from Crypto import Random
+from Crypto.Cipher import AES
 # need to pull this from an environment variable
 client = MongoClient('mongodb://passman:passman@ds161640.mlab.com:61640/passman')
 
@@ -7,10 +11,14 @@ db = client.passman
 collection = db.main_collection
 
 userName = ""
+key=None
+bs = 32
 
-def setDBUsername(username):
-    global userName 
+def setDBUsername(username,pw):
+    global userName
     userName = username
+    global key
+    key = hashlib.sha256(pw.encode()).digest()
 
 def existsDuplicateUser(name, pw):
     user = collection.find_one({"name": name})
@@ -22,16 +30,18 @@ def existsDuplicateUser(name, pw):
 
 def addUser(name, pw):
     '''
-    Adds a user to the database. This should only be called once 
-    locally, unless the user wants to have multiple accounts on 
-    their system. 
+    Adds a user to the database. This should only be called once
+    locally, unless the user wants to have multiple accounts on
+    their system.
 
-    This function creates a new Mongo 'Document' in the 
+    This function creates a new Mongo 'Document' in the
     main collection. The Document will contain all user data.
     '''
 
     if existsDuplicateUser(name, pw):
         return False
+
+    pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
 
     result = collection.insert_one({
         'name': name,
@@ -43,6 +53,7 @@ def addUser(name, pw):
     else: return False
 
 def checkUserCredentials(name, pw):
+    pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
     user = collection.find_one({"name": name, "password": pw})
     if (user): return True
     else: return False
@@ -52,7 +63,7 @@ def getAllServices():
     Returns an array of all the services for the current user.
 
     Return value contains the data as it is stored in the database. We
-    can run through the array and clean it up a bit too - just need to 
+    can run through the array and clean it up a bit too - just need to
     see the implementation of our list function in order to do so.
     '''
 
@@ -75,7 +86,7 @@ def checkIfServiceExists(name):
 
     found = False
     for service in serviceArray:
-        if service['service'] == name:
+        if decrypt(service['service']) == name:
             found = True
     return found
 
@@ -83,7 +94,7 @@ def addService(name, pw, serviceUrl="", serviceUserName=""):
     '''
     Add a service to the document for current user.
 
-    Checks if service name already exists before adding. 
+    Checks if service name already exists before adding.
     Prints an error message if service name already exists.
     '''
 
@@ -91,10 +102,10 @@ def addService(name, pw, serviceUrl="", serviceUserName=""):
     if not found:
         result = collection.find_one_and_update({'name': userName},{'$push':{
             'data': {
-                'service': name,
-                'servicePassword': pw,
-                'serviceUrl': serviceUrl,
-                'serviceUserName': serviceUserName
+                'service': encrypt(name),
+                'servicePassword': encrypt(pw),
+                'serviceUrl': encrypt(serviceUrl),
+                'serviceUserName': encrypt(serviceUserName)
             }
         }
         })
@@ -109,6 +120,8 @@ def removeService(name):
     '''
     Remove a service from an account.
     '''
+
+    name = getServiceByName(name)['service']
 
     result = collection.update({'name': userName},
             {'$pull':{ 'data': {'service' : name}}})
@@ -132,7 +145,39 @@ def getServiceByName(name):
     serviceArray = getAllServices()
 
     for serviceDict in serviceArray:
-        if serviceDict["service"] == name:
+        if decrypt(serviceDict["service"]) == name:
             service = serviceDict
 
     return service
+
+def getServiceData(name,data):
+    service = getServiceByName(name)
+    return decrypt(service[data])
+
+def getAllServiceNames():
+    serviceArray = getAllServices()
+    serviceNames=[]
+    if not serviceArray:
+        serviceArray = []
+        return None
+    for service in serviceArray:
+        serviceNames.append(decrypt(service['service']))
+    return serviceNames
+
+def encrypt(raw):
+    raw = pad(raw)
+    iv = Random.new().read(AES.block_size)
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    return base64.b64encode(iv + cipher.encrypt(raw))
+
+def decrypt(enc):
+    enc = base64.b64decode(enc)
+    iv = enc[:AES.block_size]
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    return unpad(cipher.decrypt(enc[AES.block_size:])).decode('utf-8')
+
+def pad(s):
+    return s + (bs - len(s) % bs) * chr(bs - len(s) % bs)
+
+def unpad(s):
+    return s[:-ord(s[len(s)-1:])]

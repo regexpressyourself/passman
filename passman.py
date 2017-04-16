@@ -3,13 +3,11 @@
 
 import sys
 
-import hashlib
-
 from splash import showSplash
 
 from functions import quit, getServiceFromUser, getPasswordFromUser, \
     getUserInput, handleLogin, welcomeMessage, showMenu, listServicesPrompt, \
-    addServicePrompt, getNamePrompt, getUrlPrompt \
+    addServicePrompt, getNamePrompt, getUrlPrompt, isOption, printUsage \
 
 from database import addUser, getAllServices, checkIfServiceExists, \
     addService, removeService, updateService, getServiceByName
@@ -26,9 +24,9 @@ def main():
                 addServicePrompt()
             elif len(sys.argv)==3:
                 addServicePrompt(sys.argv[2])
-            elif len(sys.argv==4):
+            elif len(sys.argv)==4:
                 addServicePrompt(sys.argv[2],sys.argv[3])
-            elif len(sys.argv==5):
+            elif len(sys.argv)==5:
                 addServicePrompt(sys.argv[2],sys.argv[3],sys.argv[4])
             else:
                 printUsage()
