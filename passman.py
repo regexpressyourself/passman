@@ -3,8 +3,6 @@
 
 import sys
 
-import hashlib
-
 from splash import showSplash
 
 from functions import quit, getServiceFromUser, getPasswordFromUser, \
