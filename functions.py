@@ -198,14 +198,3 @@ def getUrlPrompt(sname=""):
     pyperclip.copy("")
     print("Clipboard cleared")
     return True
-
-def printUsage():
-    print("Usage:",sys.argv[0],"[{add [service name] [service username] [service url] | remove [service name] | edit [service name]| list | pass [service name] | uname [service name] | url [service name]}]")
-    quit()
-
-def isOption(arg):
-    if arg=="add" or arg=="remove" or arg=="list" or arg=="edit" or arg=="pass" or arg=="url" or arg=="uname":
-        return True
-    else:
-        return False
-
