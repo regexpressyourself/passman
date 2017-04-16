@@ -1,3 +1,7 @@
+'''
+Handles all things command line - used from passman.py
+'''
+
 from login import handleLogin
 from menu import welcomeMessage
 

@@ -1,3 +1,6 @@
+'''
+Handles everything to do with the main command line menu. This includes all functions to add, remove, etc
+'''
 import time
 from functions import getUserInput
 from database import addService,\

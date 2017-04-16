@@ -1,3 +1,7 @@
+'''
+Handles all database CRUD and encryption
+'''
+
 from pymongo import MongoClient
 import base64
 import hashlib

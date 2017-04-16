@@ -1,3 +1,7 @@
+'''
+Handles all Login/Sign Up logic - calling on database module where needed
+'''
+
 from functions import getUserInput
 
 from database import checkUserCredentials, addUser, \

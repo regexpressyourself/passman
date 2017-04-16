@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+'''
+Main driver of the program
+'''
 import sys
 
 from splash import showSplash

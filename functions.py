@@ -1,3 +1,7 @@
+'''
+For generic functions that get called across different modules
+'''
+
 import sys
 import time
 # getpass for no echo on user input
