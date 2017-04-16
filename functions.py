@@ -220,7 +220,7 @@ def showMenu():
     + "(1) List all services\n" \
     + "(2) Add a new service\n" \
     + "(3) Remove an existing service\n" \
-    + "(4) Edit and existing service\n" \
+    + "(4) Edit an existing service\n" \
     + "(5) Get password for a service\n" \
     + "(6) Get username for a service\n" \
     + "(7) get URL for a service\n\n"
