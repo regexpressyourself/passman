@@ -2,11 +2,6 @@ import sys
 import time
 # getpass for no echo on user input
 from getpass import getpass
-import pyperclip
-
-from database import checkUserCredentials, addUser, addService,\
-        checkIfServiceExists, removeService, \
-        setDBUsername, getServiceData, getAllServiceNames
 
 
 def quit():

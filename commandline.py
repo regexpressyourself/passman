@@ -1,7 +1,5 @@
-from functions import handleLogin, welcomeMessage, \
-        listServicesPrompt, addServicePrompt, getNamePrompt, \
-        getUrlPrompt
-from menu import printUsage
+from login import handleLogin
+from menu import welcomeMessage
 
 def printUsage():
     print("Usage:",sys.argv[0],"[{add [service name] [service username] [service url] | remove [service name] | edit [service name]| list | pass [service name] | uname [service name] | url [service name]}]")

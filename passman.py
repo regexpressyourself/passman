@@ -5,7 +5,7 @@ import sys
 
 from splash import showSplash
 
-from functions import handleLogin
+from login import handleLogin
 from commandline import handleCLArgs
 from menu import showMenu, welcomeMessage
 
