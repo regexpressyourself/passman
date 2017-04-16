@@ -7,7 +7,7 @@ from splash import showSplash
 
 from functions import quit, getServiceFromUser, getPasswordFromUser, \
     getUserInput, handleLogin, welcomeMessage, showMenu, listServicesPrompt, \
-    addServicePrompt, getNamePrompt, getUrlPrompt, isOption \
+    addServicePrompt, getNamePrompt, getUrlPrompt, isOption, printUsage \
 
 from database import addUser, getAllServices, checkIfServiceExists, \
     addService, removeService, updateService, getServiceByName
