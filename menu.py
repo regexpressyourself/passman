@@ -1,14 +1,12 @@
 '''
 Handles everything to do with the main command line menu. This includes all functions to add, remove, etc
 '''
-import time
 import string
 import random
-from functions import getUserInput
+from functions import getUserInput, clipboard
 from database import addService,\
         checkIfServiceExists, removeService, \
         getServiceData, getAllServiceNames
-import pyperclip
 
 def welcomeMessage():
     print("\n\n")
@@ -168,11 +166,7 @@ def getPassPrompt(sname=""):
         if not checkIfServiceExists(sname):
             print("Service not found.")
             return False
-    pyperclip.copy(getServiceData(sname, 'servicePassword'))
-    print("Copied to clipboard")
-    time.sleep(20)
-    pyperclip.copy("")
-    print("Clipboard cleared")
+    clipboard(getServiceData(sname, 'servicePassword'),False, True)
     return True
 def getNamePrompt(sname=""):
     if sname=="":
@@ -184,13 +178,9 @@ def getNamePrompt(sname=""):
         if not checkIfServiceExists(sname):
             print("Service not found.")
             return False
-    pyperclip.copy(getServiceData(sname,'serviceUserName'))
-    print("Copied to clipboard")
-    print(getServiceData(sname,'serviceUserName'))
-    time.sleep(20)
-    pyperclip.copy("")
-    print("Clipboard cleared")
+    clipboard(getServiceData(sname, 'serviceUserName'),True,True)
     return True
+
 def getUrlPrompt(sname=""):
     if sname=="":
         sname = getUserInput("Enter service name: ")
@@ -202,10 +192,5 @@ def getUrlPrompt(sname=""):
             print("Service not found.")
             return False
 
-    pyperclip.copy(getServiceData(sname,'serviceUrl'))
-    print("Copied to clipboard")
-    print(getServiceData(sname,'serviceUrl'))
-    time.sleep(20)
-    pyperclip.copy("")
-    print("Clipboard cleared")
+    clipboard(getServiceData(sname,'serviceUrl'),True, True)
     return True
