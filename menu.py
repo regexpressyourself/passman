@@ -2,6 +2,8 @@
 Handles everything to do with the main command line menu. This includes all functions to add, remove, etc
 '''
 import time
+import string
+import random
 from functions import getUserInput
 from database import addService,\
         checkIfServiceExists, removeService, \
@@ -49,8 +51,58 @@ def showMenu():
 ############################################################
 
 def generatePasswordPrompt():
-    #TODO
-    print("todo")
+    lc = getUserInput("Include lowercase? (y/n/E)")
+    uc = getUserInput("Incldue Uppercase? (y/n/E)")
+    dig = getUserInput("Include numbers? (y/n/E)")
+    punc = getUserInput("Include special characters? (y/n/E)")
+    spc = getUserInput("Include spaces? (y/n/E)")
+
+    if lc=='n' and uc=='n' and dig=='n' and punc=='n' and spc=='n':
+        print("No character set chosen")
+        return ""
+
+    siz = getUserInput("Password length")
+
+    if not siz=='' and not siz.isdecimal():
+        print("not a number")
+        return ""
+
+
+
+    size = int(siz) if siz else 30
+
+    if size < 5:
+        print("Minimum length is 5")
+        return ""
+
+    charlist = string.ascii_lowercase if not lc == 'n' else ''
+    charlist += string.ascii_uppercase if not uc =='n' else ''
+    charlist += string.digits if not dig == 'n' else ''
+    charlist += string.punctuation if not punc == 'n' else ''
+    charlist += ' ' if not spc == 'n' else ''
+
+    matched = False
+    while not matched:
+        password=''
+        for _ in range(size):
+            password += ''.join(random.SystemRandom().choice(charlist))
+
+        matched = True
+        if matched and lc=='y' and not any(char.islower() for char in password):
+            matched = False
+        if matched and (uc == 'y') and not any(char.isupper() for char in password):
+            matched = False
+        if matched and (dig == 'y') and not any(char.isdigit() for char in password):
+            matched = False
+        if matched and (punc == 'y') and not any(char in string.punctuation for char in password):
+            matched= False
+        if matched and (spc == 'y') and not any(char==' ' for char in password):
+            matched = False
+
+
+
+    print(password)
+    return password
 
 def listServicesPrompt():
 
@@ -79,7 +131,7 @@ def addServicePrompt(name="",usname="",url=""):
     usname = usname if usname else getUserInput("Username: ")
 
     password = getUserInput("Password [leave blank to generate]: ", True)
-    if password == "":
+    while password == "":
         generatePasswordPrompt()
 
     url = url if url else getUserInput("Service URL: ")
