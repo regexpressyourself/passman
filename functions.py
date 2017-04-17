@@ -38,13 +38,14 @@ def clipboard(text,prnt, clear):
     if prnt:
         print(text)
     if clear:
-        myThread = Thread(target=timer, args=(30,))
+        myThread = Thread(target=timer, args=(20,text,))
         myThread.start()
 
-def timer(seconds):
+def timer(seconds,text):
     sleep(seconds)
-    clearclip()
+    clearclip(text)
 
-def clearclip():
-    pyperclip.copy("")
+def clearclip(text):
+    if pyperclip.paste() == text:
+        pyperclip.copy("")
     #print("Clipboard cleared")
