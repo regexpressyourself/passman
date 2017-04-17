@@ -67,8 +67,6 @@ def generatePasswordPrompt():
         print("not a number")
         return ""
 
-
-
     size = int(siz) if siz else 30
 
     if size < 5:
@@ -99,9 +97,6 @@ def generatePasswordPrompt():
         if matched and (spc == 'y') and not any(char==' ' for char in password):
             matched = False
 
-
-
-    print(password)
     return password
 
 def listServicesPrompt():
