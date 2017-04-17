@@ -127,7 +127,7 @@ def addServicePrompt(name="",usname="",url=""):
 
     password = getUserInput("Password [leave blank to generate]: ", True)
     while password == "":
-        generatePasswordPrompt()
+        password = generatePasswordPrompt()
 
     url = url if url else getUserInput("Service URL: ")
 
