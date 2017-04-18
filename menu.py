@@ -107,9 +107,37 @@ def removeServicePrompt(sname=""):
         success = False
     return success
 
-def editServicePrompt():
-    #TODO
-    return True
+def getEditData(oldData, dataDescription):
+    print("Current {}: {}".format(dataDescription, oldData))
+    newData = getUserInput("Change {}? (y/N)".format(dataDescription))
+    if newData == 'y':
+        newData = getUserInput("Enter the new {}".format(dataDescription))
+    else: newData = oldData
+    return newData
+
+def editServicePrompt(name=""):
+    name = name if name else getUserInput("Current service name to edit: ")
+    if not checkIfServiceExists(name):
+        print("Service does not exist.")
+        return False
+    oldName = getServiceData(name, 'service')
+    oldUserName = getServiceData(name, 'serviceUserName')
+    oldUrl = getServiceData(name, 'serviceUrl')
+
+    newName = getEditData(oldName, "service name")
+    newUserName = getEditData(oldUserName, "service username")
+    newUrl = getEditData(oldUrl, "service url")
+
+    newPassword = getUserInput("Change password? (y/N)")
+    if newPassword == 'y':
+        newPassword = getUserInput("Password [leave blank to generate]: ", True)
+        if newPassword == "":
+            newPassword = generatePasswordPrompt()
+    else: newPassword = oldPassword
+
+    result = updateService(oldName, newName, newPassword, newUrl, newUserName)
+    if result: return True
+    else: return False
 
 def getPassPrompt(sname=""):
     if sname=="":
