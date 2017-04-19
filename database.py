@@ -196,6 +196,12 @@ def changePassword(password):
         })
     return result
 
+def getFullJson():
+    global userName
+    result = collection.find_one({'name': userName})
+    result["_id"] = ""
+    return result
+
 def encrypt(raw):
     raw = pad(raw)
     iv = Random.new().read(AES.block_size)
