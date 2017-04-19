@@ -4,7 +4,7 @@ Handles everything to do with the main command line menu. This includes all func
 import string
 import random
 from functions import getUserInput, clipboard
-from database import addService,\
+from database import addService, updateService,\
         checkIfServiceExists, removeService, \
         getServiceData, getAllServiceNames
 
@@ -187,21 +187,33 @@ def editServicePrompt(name=""):
 def getPassPrompt(sname=""):
     if sname=="":
         sname = getUserInput("Enter service name: ")
-        while not checkIfServiceExists(sname):
+        inc = 0
+        while (not checkIfServiceExists(sname)) and inc < 2:
             print("Service not found.")
             sname = getUserInput("Enter service name: ")
+            inc += 1
+        if inc >= 2:
+            print("Returning to menu")
+            showMenu()
+
     else:
         if not checkIfServiceExists(sname):
             print("Service not found.")
             return False
     clipboard(getServiceData(sname, 'servicePassword'),False, True)
     return True
+
 def getNamePrompt(sname=""):
     if sname=="":
         sname = getUserInput("Enter service name: ")
-        while not checkIfServiceExists(sname):
+        inc = 0
+        while (not checkIfServiceExists(sname)) and inc < 2:
             print("Service not found.")
             sname = getUserInput("Enter service name: ")
+            inc += 1
+        if inc >= 2:
+            print("Returning to menu")
+            showMenu()
     else:
         if not checkIfServiceExists(sname):
             print("Service not found.")
@@ -211,10 +223,14 @@ def getNamePrompt(sname=""):
 
 def getUrlPrompt(sname=""):
     if sname=="":
+        inc = 0
         sname = getUserInput("Enter service name: ")
-        while not checkIfServiceExists(sname):
+        while (not checkIfServiceExists(sname)) and inc < 2:
             print("Service not found.")
             sname = getUserInput("Enter service name: ")
+        if inc >= 2:
+            print("Returning to menu")
+            showMenu()
     else:
         if not checkIfServiceExists(sname):
             print("Service not found.")
