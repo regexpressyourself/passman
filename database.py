@@ -2,9 +2,11 @@
 Handles all database CRUD and encryption
 '''
 
-from pymongo import MongoClient
+import os
 import base64
 import hashlib
+import json
+from pymongo import MongoClient
 from Crypto import Random
 from Crypto.Cipher import AES
 # need to pull this from an environment variable
