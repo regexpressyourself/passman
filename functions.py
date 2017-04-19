@@ -33,6 +33,7 @@ class StoppingThread(Thread):
 
 def quit():
     print("\nSee you later!\n")
+    myThread.stop()
     sys.exit()
 
 def getUserInput(prompt, isSecret=False):
