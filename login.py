@@ -55,6 +55,7 @@ def signUpUser():
     username = getUserInput("Please enter your username")
     pw = getUserInput("Please enter your password", True)
     if addUser(username, pw):
+        setDBUsername(username,pw)
         return True
     else:
         print("Sorry, that username is already taken")
