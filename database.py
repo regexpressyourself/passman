@@ -183,6 +183,17 @@ def getAllServiceNames():
         serviceNames.append(decrypt(service['service']))
     return serviceNames
 
+def changePassword(password):
+    global userName
+    setDBUsername(password)
+    password = hashlib.sha512(password.encode('utf-8')).hexdigest()
+
+    result = collection.find_one_and_update({'name': userName},{'$set':{
+        'password': password
+        }
+        })
+    return result
+
 def encrypt(raw):
     raw = pad(raw)
     iv = Random.new().read(AES.block_size)

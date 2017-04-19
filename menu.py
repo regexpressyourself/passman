@@ -3,9 +3,10 @@ Handles everything to do with the main command line menu. This includes all func
 '''
 import string
 import random
-from functions import getUserInput, clipboard
+from functions import getUserInput, clipboard, quit
 from database import addService, updateService,\
         checkIfServiceExists, removeService, \
+        checkUserCredentials, changePassword,\
         getServiceData, getAllServiceNames
 
 def welcomeMessage():
@@ -22,7 +23,8 @@ def showMenu():
     + "(4) Edit an existing service\n" \
     + "(5) Get password for a service\n" \
     + "(6) Get username for a service\n" \
-    + "(7) get URL for a service\n\n"
+    + "(7) Get URL for a service\n" \
+    + "(8) Change master password\n\n"
 
     option = getUserInput(prompt)
     if option =="1":
@@ -39,6 +41,8 @@ def showMenu():
         getNamePrompt()
     elif option =="7":
         getUrlPrompt()
+    elif option =="8":
+        changeMasterPrompt()
     else:
         print("Didn't get that...\n")
         showMenu()
@@ -47,6 +51,28 @@ def showMenu():
 ############################################################
 # Menu Navigation Functions
 ############################################################
+
+def changeMasterPrompt():
+    oldPass = getUserInput("Enter your old password", True)
+    isUser = checkUserCredentials(oldPass)
+    inc = 0
+    while (not isUser) and inc < 2:
+        print("That didn't work")
+        oldPass = getUserInput("Enter your old password", True)
+        isUser = checkUserCredentials(oldPass)
+        inc += 1
+    if (inc >= 2):
+        quit()
+
+    newPass = getUserInput("Enter your new password", True)
+    newPassCheck = getUserInput("Once more, with feeling", True)
+    while newPass != newPassCheck:
+        print("Sorry. Those didn't match.")
+        newPass = getUserInput("Enter your new password", True)
+        newPassCheck = getUserInput("Once more, with feeling", True)
+
+    changePassword(newPass)
+    return True
 
 def generatePasswordPrompt():
     lc = getUserInput("Include lowercase? (y/n/E)")
