@@ -8,7 +8,8 @@ import hashlib
 from Crypto import Random
 from Crypto.Cipher import AES
 # need to pull this from an environment variable
-client = MongoClient('mongodb://passman:passman@ds161640.mlab.com:61640/passman')
+
+client = MongoClient('mongodb://passman:passman@ds161640.mlab.com:61640/passman?serverSelectionTimeoutMS=5000')
 
 db = client.passman
 
@@ -47,20 +48,30 @@ def addUser(name, pw):
 
     pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
 
-    result = collection.insert_one({
-        'name': name,
-        'password': pw,
-        'data': []
-        })
+    try:
+        result = collection.insert_one({
+            'name': name,
+            'password': pw,
+            'data': []
+            })
+    except:
+        print("No Connection")
+        quit()
 
     if result: return True
     else: return False
 
 def checkUserCredentials(name, pw):
     pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
-    user = collection.find_one({"name": name, "password": pw})
-    if (user): return True
-    else: return False
+    try:
+        user = collection.find_one({"name": name, "password": pw})
+        #TODO check timestamps on db
+        if (user): return True
+        else: return False
+    except:
+        print("No connection")
+        quit()
+        #TODO implement new offline menu
 
 def getAllServices():
     '''
