@@ -219,3 +219,31 @@ def pad(s):
 
 def unpad(s):
     return s[:-ord(s[len(s)-1:])]
+
+def checkDirectory(dir_path):
+    if not os.path.isdir(dir_path):
+        os.makedirs(dir_path)
+
+def checkFile(file_path):
+    if not os.path.isfile(file_path):
+        open(file_path, 'w').close() # create file
+
+def pullDatabase():
+    global userName
+    dir_path = os.path.expanduser("~/.passman")
+    file_path = os.path.expanduser("~/.passman/{}.json".format(userName))
+
+    checkDirectory(dir_path)
+    checkFile(file_path)
+
+    fileTime = os.path.getmtime(file_path)
+
+    if fileTime == fileTime:
+        # TODO Check for matching timestamps once they are implemented
+        # update local db
+        serverDBData = getFullJson()
+        open(file_path, 'w').close() # erase contents
+        with open(file_path, 'w') as fp:
+            json.dump(serverDBData, fp, indent=4,)
+
+    return True
