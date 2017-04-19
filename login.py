@@ -5,7 +5,7 @@ Handles all Login/Sign Up logic - calling on database module where needed
 from functions import getUserInput
 
 from database import checkUserCredentials, addUser, \
-        setDBUsername
+        setDBUsername, pullDatabase 
 
 ############################################################
 # Login Functions
@@ -46,6 +46,7 @@ def loginUser():
     pw = getUserInput("Please enter your password", True)
     if checkUserCredentials(pw, username):
         setDBUsername(pw, username)
+        pullDatabase()
         return True
     else:
         repromptLogin()
@@ -56,6 +57,7 @@ def signUpUser():
     pw = getUserInput("Please enter your password", True)
     if addUser(username, pw):
         setDBUsername(pw, username)
+        pullDatabase()
         return True
     else:
         print("Sorry, that username is already taken")
