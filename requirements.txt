@@ -1,0 +1,4 @@
+pymongo
+Crypto
+asciimatics
+pyperclip
