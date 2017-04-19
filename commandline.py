@@ -8,7 +8,7 @@ from menu import welcomeMessage, listServicesPrompt,\
         getUrlPrompt, getNamePrompt
 
 def printUsage(argv):
-    print("Usage:",argv[0],"[{add [service name] [service username] [service url] | remove [service name] | edit [service name]| list | pass [service name] | uname [service name] | url [service name]}]")
+    print("Usage:",argv[0],"[{\nadd\t[service name] [service username] [service url]  \nremove\t[service name]  \nedit\t[service name] \nlist\t \npass\t[service name] \nuname\t[service name]  \nurl\t[service name]}]")
     quit()
 
 def isOption(arg):
