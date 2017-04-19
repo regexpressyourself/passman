@@ -19,9 +19,10 @@ userName = ""
 key=None
 bs = 32
 
-def setDBUsername(username,pw):
+def setDBUsername(pw, username=""):
     global userName
-    userName = username
+    if username != "":
+        userName = username
     global key
     key = hashlib.sha256(pw.encode()).digest()
 
@@ -61,7 +62,10 @@ def addUser(name, pw):
     if result: return True
     else: return False
 
-def checkUserCredentials(name, pw):
+def checkUserCredentials(pw, name=""):
+    if name == "":
+        global userName
+        name = userName
     pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
     try:
         user = collection.find_one({"name": name, "password": pw})

@@ -44,8 +44,8 @@ def handleLogin():
 def loginUser():
     username = getUserInput("Please enter your username")
     pw = getUserInput("Please enter your password", True)
-    if checkUserCredentials(username, pw):
-        setDBUsername(username,pw)
+    if checkUserCredentials(pw, username):
+        setDBUsername(pw, username)
         return True
     else:
         repromptLogin()
@@ -55,7 +55,7 @@ def signUpUser():
     username = getUserInput("Please enter your username")
     pw = getUserInput("Please enter your password", True)
     if addUser(username, pw):
-        setDBUsername(username,pw)
+        setDBUsername(pw, username)
         return True
     else:
         print("Sorry, that username is already taken")
