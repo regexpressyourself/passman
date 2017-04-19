@@ -8,7 +8,8 @@ import hashlib
 from Crypto import Random
 from Crypto.Cipher import AES
 # need to pull this from an environment variable
-client = MongoClient('mongodb://passman:passman@ds161640.mlab.com:61640/passman')
+
+client = MongoClient('mongodb://passman:passman@ds161640.mlab.com:61640/passman?serverSelectionTimeoutMS=5000')
 
 db = client.passman
 
