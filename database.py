@@ -242,8 +242,13 @@ def pullDatabase():
         # TODO Check for matching timestamps once they are implemented
         # update local db
         serverDBData = getFullJson()
-        open(file_path, 'w').close() # erase contents
-        with open(file_path, 'w') as fp:
-            json.dump(serverDBData, fp, indent=4,)
+        if serverDBData:
+            open(file_path, 'w').close() # erase contents
+            with open(file_path, 'w') as fp:
+                data = json.dumps(serverDBData, indent=4)
+                data.encode('utf-8').strip()
+                fp.write(data)
+            return True
+        else: 
+            return False
 
-    return True
