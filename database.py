@@ -3,15 +3,15 @@ Handles all database CRUD and encryption
 '''
 
 import os
-import base64
 import hashlib
 import json
 from pymongo import MongoClient
 from Crypto import Random
-from Crypto.Cipher import AES
+from offlinemenu import handleOfflineMenu
+from encryption import encrypt, decrypt, pad, unpad
 # need to pull this from an environment variable
 
-client = MongoClient('mongodb://passman:passman@ds161640.mlab.com:61640/passman?serverSelectionTimeoutMS=5000')
+client = MongoClient('mongodb://passman:passman@ds161640.mlab.com:61640/passman?serverSelectionTimeoutMS=50')
 
 db = client.passman
 
@@ -19,7 +19,6 @@ collection = db.main_collection
 
 userName = ""
 key=None
-bs = 32
 
 def setDBUsername(pw, username=""):
     global userName
@@ -32,9 +31,6 @@ def existsDuplicateUser(name, pw):
     user = collection.find_one({"name": name})
     if (user): return True
     else: return False
-
-
-
 
 def addUser(name, pw):
     '''
@@ -58,8 +54,9 @@ def addUser(name, pw):
             'data': []
             })
     except:
-        print("No Connection")
-        quit()
+        setDBUsername(pw, name)
+        global key
+        handleOfflineMenu(name, key)
 
     if result: return True
     else: return False
@@ -75,9 +72,9 @@ def checkUserCredentials(pw, name=""):
         if (user): return True
         else: return False
     except:
-        print("No connection")
-        quit()
-        #TODO implement new offline menu
+        setDBUsername(pw, name)
+        global key
+        handleOfflineMenu(name, key)
 
 def getAllServices():
     '''
@@ -107,7 +104,7 @@ def checkIfServiceExists(name):
 
     found = False
     for service in serviceArray:
-        if decrypt(service['service']) == name:
+        if decrypt(service['service'], key) == name:
             found = True
     return found
 
@@ -121,12 +118,13 @@ def addService(name, pw, serviceUrl="", serviceUserName=""):
 
     found = checkIfServiceExists(name)
     if not found:
+        global key
         result = collection.find_one_and_update({'name': userName},{'$push':{
             'data': {
-                'service': encrypt(name),
-                'servicePassword': encrypt(pw),
-                'serviceUrl': encrypt(serviceUrl),
-                'serviceUserName': encrypt(serviceUserName)
+                'service': encrypt(name, key),
+                'servicePassword': encrypt(pw, key),
+                'serviceUrl': encrypt(serviceUrl, key),
+                'serviceUserName': encrypt(serviceUserName, key)
             }
         }
         })
@@ -166,14 +164,16 @@ def getServiceByName(name):
     serviceArray = getAllServices()
 
     for serviceDict in serviceArray:
-        if decrypt(serviceDict["service"]) == name:
+        global key
+        if decrypt(serviceDict["service"], key) == name:
             service = serviceDict
 
     return service
 
 def getServiceData(name,data):
     service = getServiceByName(name)
-    return decrypt(service[data])
+    global key
+    return decrypt(service[data], key)
 
 def getAllServiceNames():
     serviceArray = getAllServices()
@@ -182,7 +182,8 @@ def getAllServiceNames():
         serviceArray = []
         return None
     for service in serviceArray:
-        serviceNames.append(decrypt(service['service']))
+        global key
+        serviceNames.append(decrypt(service['service'], key))
     return serviceNames
 
 def changePassword(password):
@@ -201,24 +202,6 @@ def getFullJson():
     result = collection.find_one({'name': userName})
     result["_id"] = ""
     return result
-
-def encrypt(raw):
-    raw = pad(raw)
-    iv = Random.new().read(AES.block_size)
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    return base64.b64encode(iv + cipher.encrypt(raw)).decode('utf-8')
-
-def decrypt(enc):
-    enc = base64.b64decode(enc)
-    iv = enc[:AES.block_size]
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    return unpad(cipher.decrypt(enc[AES.block_size:])).decode('utf-8')
-
-def pad(s):
-    return s + (bs - len(s) % bs) * chr(bs - len(s) % bs)
-
-def unpad(s):
-    return s[:-ord(s[len(s)-1:])]
 
 def checkDirectory(dir_path):
     if not os.path.isdir(dir_path):
