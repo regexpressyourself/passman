@@ -6,9 +6,7 @@ import os
 import hashlib
 import json
 from pymongo import MongoClient
-from Crypto import Random
-from offlinemenu import handleOfflineMenu
-from encryption import encrypt, decrypt, pad, unpad
+from encryption import encrypt, decrypt
 # need to pull this from an environment variable
 
 client = MongoClient('mongodb://passman:passman@ds161640.mlab.com:61640/passman?serverSelectionTimeoutMS=50')
@@ -54,12 +52,17 @@ def addUser(name, pw):
             'data': []
             })
     except:
-        setDBUsername(pw, name)
-        global key
-        handleOfflineMenu(name, key)
+        print("Error adding user")
 
     if result: return True
     else: return False
+
+def checkConnection(name):
+    try:
+        user = collection.find_one({"name": name})
+        return True
+    except:
+        return False
 
 def checkUserCredentials(pw, name=""):
     if name == "":
@@ -72,9 +75,7 @@ def checkUserCredentials(pw, name=""):
         if (user): return True
         else: return False
     except:
-        setDBUsername(pw, name)
-        global key
-        handleOfflineMenu(name, key)
+        print("Error checking user credentials")
 
 def getAllServices():
     '''
