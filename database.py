@@ -200,8 +200,10 @@ def changePassword(password):
 
 def getFullJson():
     global userName
-    result = collection.find_one({'name': userName})
-    result["_id"] = ""
+    result = None
+    if userName:
+        result = collection.find_one({'name': userName})
+        result["_id"] = ""
     return result
 
 def checkDirectory(dir_path):
