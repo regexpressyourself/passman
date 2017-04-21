@@ -9,6 +9,7 @@ from getpass import getpass
 from threading import Thread
 from time import sleep
 import pyperclip
+from database import pullDatabase, checkConnection
 
 ############################################################
 # Generic Functions
@@ -35,6 +36,9 @@ def quit():
     print("\nSee you later!\n")
     if myThread:
         myThread.stop()
+    if checkConnection("test"):
+        pullDatabase()
+
     sys.exit()
 
 def getUserInput(prompt, isSecret=False):
