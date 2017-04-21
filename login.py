@@ -1,11 +1,13 @@
 '''
 Handles all Login/Sign Up logic - calling on database module where needed
 '''
-
-from functions import getUserInput
-
+import os
+import ast
+from functions import getUserInput, quit
+import hashlib
+from offlinemenu import handleOfflineMenu
 from database import checkUserCredentials, addUser, \
-        setDBUsername, pullDatabase 
+        setDBUsername, pullDatabase, checkConnection
 
 ############################################################
 # Login Functions
