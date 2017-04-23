@@ -7,9 +7,6 @@ key = None
 def handleOfflineMenu(name, _key):
     global key 
     key = _key
-    print("NOTE: No connection")
-    print("Continuing in offline mode. \nYou can retrieve any service data, " \
-            +"but you will not be able to edit or upload data\n")
     prompt = "What do you want to do?\n\n" \
     + "(1) List all services\n" \
     + "(2) Get password for a service\n" \
