@@ -27,8 +27,7 @@ def main():
         else:
             handleOfflineLogin()
             while True:
-                showMenu()
-                handleOfflineMenu
+                handleOfflineMenu()
 
 
 
