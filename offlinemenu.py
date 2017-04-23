@@ -3,10 +3,7 @@ from functions import getUserInput, clipboard
 from encryption import encrypt, decrypt, pad, unpad
 from JSON import getServicesOffline, getServiceDataOffline
 
-key = None
-def handleOfflineMenu(name, _key):
-    global key 
-    key = _key
+def handleOfflineMenu():
     prompt = "What do you want to do?\n\n" \
     + "(1) List all services\n" \
     + "(2) Get password for a service\n" \
@@ -15,85 +12,76 @@ def handleOfflineMenu(name, _key):
 
     option = getUserInput(prompt)
     if option =="1":
-        listServicesOffline(name)
-        handleOfflineMenu(name, key)
+        listServicesOffline()
+        handleOfflineMenu()
     elif option =="2":
-        getPasswordOffline(name)
-        handleOfflineMenu(name, key)
+        getPasswordOffline()
+        handleOfflineMenu()
     elif option =="3":
-        getUserNameOffline(name)
-        handleOfflineMenu(name, key)
+        getUserNameOffline()
+        handleOfflineMenu()
     elif option =="4":
-        getURLOffline(name)
-        handleOfflineMenu(name, key)
+        getURLOffline()
+        handleOfflineMenu()
     else:
         print("Didn't get that...\n")
         handleOfflineMenu()
 
 
-def listServicesOffline(name):
+def listServicesOffline():
     print('{:20}{:20}'.format('Service/URL', 'Username'))
     print('-------------------------------------')
-    serviceArray = getServicesOffline(name)    
+    serviceArray = getServicesOffline()
 
     if not serviceArray:
         serviceArray = []
         print("No services to show!\n")
 
-    global key
     for service in serviceArray:
         name = service['service']
         uname = service['serviceUserName']
         url = service['serviceUrl']
-        print('{:20}{:20}\n{:20}\n'.format(\
-                decrypt(name, key),\
-                decrypt(uname, key),\
-                decrypt(url, key)))
+        print('{:20}{:20}\n{:20}\n'.format(name, uname, url))
     return True
-def getPasswordOffline(name):
-    global key
+
+def getPasswordOffline():
     sname = getUserInput("Enter service name: ")
     inc = 0
-    while (not getServiceDataOffline(name, sname, key)) and inc < 2:
+    while (not getServiceDataOffline(sname)) and inc < 2:
         print("Service not found.")
         sname = getUserInput("Enter service name: ")
         inc += 1
     if inc >= 2:
         print("Returning to menu")
-        handleOfflineMenu(name, key)
-    password = getServiceDataOffline(name, sname, key)['servicePassword']
-    password = decrypt(password, key)
+        handleOfflineMenu()
+    password = getServiceDataOffline(sname)['servicePassword']
     clipboard(password, False, True)
     return True
 
-def getUserNameOffline(name):
-    global key
+def getUserNameOffline():
     sname = getUserInput("Enter service name: ")
     inc = 0
-    while (not getServiceDataOffline(name, sname, key)) and inc < 2:
+    while (not getServiceDataOffline(sname)) and inc < 2:
         print("Service not found.")
         sname = getUserInput("Enter service name: ")
         inc += 1
     if inc >= 2:
         print("Returning to menu")
-        handleOfflineMenu(name, key)
-    username = getServiceDataOffline(name, sname, key)['serviceUserName']
-    username = decrypt(username, key)
+        handleOfflineMenu()
+    username = getServiceDataOffline(sname)['serviceUserName']
     clipboard(username, False, True)
     return True
 
-def getURLOffline(name):
-    global key
+def getURLOffline():
     sname = getUserInput("Enter service name: ")
     inc = 0
-    while (not getServiceDataOffline(name, sname, key)) and inc < 2:
+    while (not getServiceDataOffline(sname)) and inc < 2:
         print("Service not found.")
         sname = getUserInput("Enter service name: ")
         inc += 1
     if inc >= 2:
         print("Returning to menu")
-        handleOfflineMenu(name, key)
-    serviceURL = getServiceDataOffline(name, sname, key)['serviceUrl']
-    serviceURL = decrypt(serviceURL, key)
+        handleOfflineMenu()
+    serviceURL = getServiceDataOffline(sname)['serviceUrl']
     clipboard(serviceURL, False, True)
     return True
