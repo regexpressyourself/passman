@@ -147,7 +147,7 @@ def addServicePrompt(name="",usname="",url=""):
         print("Service already exists.")
         return False
 
-    usname = usname if usname else getUserInput("Username: ")
+    usname = usname if usname else getUserInput("Service username: ")
 
     password = getUserInput("Password [leave blank to generate]: ", True)
     while password == "":
@@ -194,6 +194,7 @@ def editServicePrompt(name=""):
     oldName = getServiceData(name, 'service')
     oldUserName = getServiceData(name, 'serviceUserName')
     oldUrl = getServiceData(name, 'serviceUrl')
+    oldPassword = getServiceData(name, 'servicePassword')
 
     newName = getEditData(oldName, "service name")
     newUserName = getEditData(oldUserName, "service username")
