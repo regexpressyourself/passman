@@ -1,6 +1,5 @@
 
 from functions import getUserInput, clipboard
-from encryption import encrypt, decrypt, pad, unpad
 from JSON import getServicesOffline, getServiceDataOffline
 
 def handleOfflineMenu():

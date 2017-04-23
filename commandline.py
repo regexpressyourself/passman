@@ -2,16 +2,15 @@
 Handles all things command line - used from passman.py
 '''
 
-from login import handleLogin, handleOfflineLogin, loginUser, \
-        getOfflineUsername
-from menu import welcomeMessage, listServicesPrompt,\
-        addServicePrompt, editServicePrompt, removeServicePrompt,\
+import argparse
+from login import handleOfflineLogin, loginUser
+from menu import listServicesPrompt, addServicePrompt, \
+        editServicePrompt, removeServicePrompt,\
         getUrlPrompt, getNamePrompt, getPassPrompt
 from database import checkConnection
 from offlinemenu import getPasswordOffline, listServicesOffline, \
         getUserNameOffline, getURLOffline
 
-import argparse
 '''
 -u -user:   Passman username
 -w -www:    URL

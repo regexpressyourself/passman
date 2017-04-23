@@ -7,7 +7,6 @@ import time
 # getpass for no echo on user input
 from getpass import getpass
 from threading import Thread
-from time import sleep
 import pyperclip
 from database import pullDatabase, checkConnection
 
@@ -72,7 +71,7 @@ def timer(seconds,text):
     global myThread
     for i in range(seconds):
         if myThread.is_running():
-            sleep(1)
+            time.sleep(1)
         else:
             myThread.stopped()
             return

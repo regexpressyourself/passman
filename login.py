@@ -3,9 +3,8 @@ Handles all Login/Sign Up logic - calling on database module where needed
 '''
 import os
 import ast
-from functions import getUserInput, quit
 import hashlib
-from offlinemenu import handleOfflineMenu
+from functions import getUserInput, quit
 from database import checkUserCredentials, addUser, \
         setDBUsername, pullDatabase, checkConnection
 from JSON import setOfflineUsername
