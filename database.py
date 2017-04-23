@@ -225,8 +225,10 @@ def getFullJson():
     Convert the online database into plain JSON for local storage
     '''
     global userName
-    result = collection.find_one({'name': userName})
-    result["_id"] = ""
+    result = None
+    if userName:
+        result = collection.find_one({'name': userName})
+        result["_id"] = ""
     return result
 
 def checkDirectory(dir_path):
