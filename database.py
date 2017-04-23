@@ -19,6 +19,9 @@ userName = ""
 key=None
 
 def setDBUsername(pw, username=""):
+    '''
+    Set the global key and username for use throughout runtime
+    '''
     global userName
     if username != "":
         userName = username
@@ -26,6 +29,9 @@ def setDBUsername(pw, username=""):
     key = hashlib.sha256(pw.encode()).digest()
 
 def existsDuplicateUser(name, pw):
+    '''
+    Check if a user is already in the database on signup
+    '''
     user = collection.find_one({"name": name})
     if (user): return True
     else: return False
@@ -58,6 +64,9 @@ def addUser(name, pw):
     else: return False
 
 def checkConnection(name):
+    '''
+    A generic check for a database connection
+    '''
     try:
         user = collection.find_one({"name": name})
         return True
@@ -65,6 +74,9 @@ def checkConnection(name):
         return False
 
 def checkUserCredentials(pw, name=""):
+    '''
+    Check that the username/password combination is in the database
+    '''
     if name == "":
         global userName
         name = userName
@@ -172,11 +184,18 @@ def getServiceByName(name):
     return service
 
 def getServiceData(name,data):
+    '''
+    Get a specific subset of data from a service 
+    (i.e. just the username, password, etc.)
+    '''
     service = getServiceByName(name)
     global key
     return decrypt(service[data], key)
 
 def getAllServiceNames():
+    '''
+    Get all the names of existing services for a user
+    '''
     serviceArray = getAllServices()
     serviceNames=[]
     if not serviceArray:
@@ -188,6 +207,9 @@ def getAllServiceNames():
     return serviceNames
 
 def changePassword(password):
+    '''
+    Change the master password (the password to passman itself) for a user
+    '''
     global userName
     setDBUsername(password)
     password = hashlib.sha512(password.encode('utf-8')).hexdigest()
@@ -199,20 +221,38 @@ def changePassword(password):
     return result
 
 def getFullJson():
+    '''
+    Convert the online database into plain JSON for local storage
+    '''
     global userName
     result = collection.find_one({'name': userName})
     result["_id"] = ""
     return result
 
 def checkDirectory(dir_path):
+    '''
+    Check for and/or create the ~/.passman directory
+    '''
     if not os.path.isdir(dir_path):
         os.makedirs(dir_path)
 
 def checkFile(file_path):
+    '''
+    Check for and/or create the ~/.passman/<user>.json file
+    '''
     if not os.path.isfile(file_path):
         open(file_path, 'w').close() # create file
 
 def pullDatabase():
+    '''
+    Pull the online database to a local file for offline usage later.
+
+    This is called on login and on quit. Any changes in between will not 
+    be logged into the local file.
+
+    Potential improvement here: check timestamps on the database to only 
+    pull it down when needed
+    '''
     global userName
     dir_path = os.path.expanduser("~/.passman")
     file_path = os.path.expanduser("~/.passman/{}.json".format(userName))
