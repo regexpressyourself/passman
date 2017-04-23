@@ -1,7 +1,7 @@
 
-from functions import getUserInput
+from functions import getUserInput, clipboard
 from encryption import encrypt, decrypt, pad, unpad
-from JSON import getServicesOffline
+from JSON import getServicesOffline, getServiceDataOffline
 
 key = None
 def handleOfflineMenu(name, _key):
@@ -18,13 +18,13 @@ def handleOfflineMenu(name, _key):
         listServicesOffline(name)
         handleOfflineMenu(name, key)
     elif option =="2":
-        addServiceOffline()
+        getPasswordOffline(name)
         handleOfflineMenu(name, key)
     elif option =="3":
-        removeServiceOffline()
+        getUserNameOffline(name)
         handleOfflineMenu(name, key)
     elif option =="4":
-        editServiceOffline()
+        getURLOffline(name)
         handleOfflineMenu(name, key)
     else:
         print("Didn't get that...\n")
@@ -35,7 +35,6 @@ def listServicesOffline(name):
     print('{:20}{:20}'.format('Service/URL', 'Username'))
     print('-------------------------------------')
     serviceArray = getServicesOffline(name)    
-    serviceArray = serviceArray['data']
 
     if not serviceArray:
         serviceArray = []
@@ -51,9 +50,50 @@ def listServicesOffline(name):
                 decrypt(uname, key),\
                 decrypt(url, key)))
     return True
-def addServiceOffline():
+def getPasswordOffline(name):
+    global key
+    sname = getUserInput("Enter service name: ")
+    inc = 0
+    while (not getServiceDataOffline(name, sname, key)) and inc < 2:
+        print("Service not found.")
+        sname = getUserInput("Enter service name: ")
+        inc += 1
+    if inc >= 2:
+        print("Returning to menu")
+        handleOfflineMenu(name, key)
+    password = getServiceDataOffline(name, sname, key)['servicePassword']
+    password = decrypt(password, key)
+    clipboard(password, False, True)
     return True
-def removeServiceOffline():
+
+def getUserNameOffline(name):
+    global key
+    sname = getUserInput("Enter service name: ")
+    inc = 0
+    while (not getServiceDataOffline(name, sname, key)) and inc < 2:
+        print("Service not found.")
+        sname = getUserInput("Enter service name: ")
+        inc += 1
+    if inc >= 2:
+        print("Returning to menu")
+        handleOfflineMenu(name, key)
+    username = getServiceDataOffline(name, sname, key)['serviceUserName']
+    username = decrypt(username, key)
+    clipboard(username, False, True)
     return True
-def editServiceOffline():
+
+def getURLOffline(name):
+    global key
+    sname = getUserInput("Enter service name: ")
+    inc = 0
+    while (not getServiceDataOffline(name, sname, key)) and inc < 2:
+        print("Service not found.")
+        sname = getUserInput("Enter service name: ")
+        inc += 1
+    if inc >= 2:
+        print("Returning to menu")
+        handleOfflineMenu(name, key)
+    serviceURL = getServiceDataOffline(name, sname, key)['serviceUrl']
+    serviceURL = decrypt(serviceURL, key)
+    clipboard(serviceURL, False, True)
     return True
