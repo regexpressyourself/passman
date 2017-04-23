@@ -1,8 +1,14 @@
+'''
+Handles all offline menu functionality
+'''
 
 from functions import getUserInput, clipboard
 from JSON import getServicesOffline, getServiceDataOffline
 
 def handleOfflineMenu():
+    '''
+    Only read-related commands are available in offline mode
+    '''
     prompt = "What do you want to do?\n\n" \
     + "(1) List all services\n" \
     + "(2) Get password for a service\n" \
@@ -28,6 +34,10 @@ def handleOfflineMenu():
 
 
 def listServicesOffline():
+    '''
+    Similar to menu.py's list function, but pulls from local 
+    JSON file instead
+    '''
     print('{:20}{:20}'.format('Service/URL', 'Username'))
     print('-------------------------------------')
     serviceArray = getServicesOffline()
@@ -44,6 +54,10 @@ def listServicesOffline():
     return True
 
 def getPasswordOffline(sname=""):
+    '''
+    Similar to menu.py's get password function, but pulls from local 
+    JSON file instead
+    '''
     sname = sname if sname else getUserInput("Enter service name: ")
     inc = 0
     while (not getServiceDataOffline(sname)) and inc < 2:
@@ -58,6 +72,10 @@ def getPasswordOffline(sname=""):
     return True
 
 def getUserNameOffline(sname=""):
+    '''
+    Similar to menu.py's get username function, but pulls from local 
+    JSON file instead
+    '''
     sname = sname if sname else getUserInput("Enter service name: ")
     inc = 0
     while (not getServiceDataOffline(sname)) and inc < 2:
@@ -72,6 +90,10 @@ def getUserNameOffline(sname=""):
     return True
 
 def getURLOffline(sname=""):
+    '''
+    Similar to menu.py's get URL function, but pulls from local 
+    JSON file instead
+    '''
     sname = sname if sname else getUserInput("Enter service name: ")
     inc = 0
     while (not getServiceDataOffline(sname)) and inc < 2:

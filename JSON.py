@@ -1,3 +1,8 @@
+'''
+Handles basic I/O of the local copy of the database, stored as 
+a JSON file in the ~/.passman directory
+'''
+
 import os
 import json
 import ast
@@ -7,12 +12,20 @@ from encryption import decrypt
 global name
 global key
 def setOfflineUsername(_name, _key):
+    '''
+    Sets the username and key for the session
+
+    Equivalent of the setDBUsername function in database.py
+    '''
     global name
     global key
     name = _name
     key = _key
 
 def getServicesOffline():
+    '''
+    Get an array of services for a user
+    '''
     global name
     dir_path = os.path.expanduser("~/.passman")
     file_path = os.path.expanduser("~/.passman/{}.json".format(name))
@@ -31,6 +44,9 @@ def getServicesOffline():
     return data
 
 def getServiceDataOffline(sname):
+    '''
+    Get an specific service for a user
+    '''
     global name
     serviceArray = getServicesOffline()
     for service in serviceArray:

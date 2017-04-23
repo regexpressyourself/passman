@@ -1,3 +1,7 @@
+'''
+Handles the encryption and decryption of service data
+'''
+
 import base64
 from Crypto.Cipher import AES
 from Crypto import Random

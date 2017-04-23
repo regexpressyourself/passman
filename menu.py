@@ -16,6 +16,9 @@ def welcomeMessage():
     print("##################################################\n\n")
 
 def showMenu():
+    '''
+    Show the main menu for command-line usage
+    '''
     prompt = "What do you want to do?\n\n" \
     + "(1) List all services\n" \
     + "(2) Add a new service\n" \
@@ -53,6 +56,9 @@ def showMenu():
 ############################################################
 
 def changeMasterPrompt():
+    '''
+    Menu for changing the master password to the passman application
+    '''
     oldPass = getUserInput("Enter your old password", True)
     isUser = checkUserCredentials(oldPass)
     inc = 0
@@ -75,6 +81,9 @@ def changeMasterPrompt():
     return True
 
 def generatePasswordPrompt():
+    '''
+    Generates a random password to the users specifications
+    '''
     lc = getUserInput("Include lowercase? (y/n/E)")
     uc = getUserInput("Incldue Uppercase? (y/n/E)")
     dig = getUserInput("Include numbers? (y/n/E)")
@@ -124,7 +133,9 @@ def generatePasswordPrompt():
     return password
 
 def listServicesPrompt():
-
+    '''
+    List the available services in an easy-to-read fashion
+    '''
     print('{:20}{:20}'.format('Service/URL', 'Username'))
     print('-------------------------------------')
     serviceArray = getAllServiceNames()
@@ -141,7 +152,10 @@ def listServicesPrompt():
     return True
 
 def addServicePrompt(name="",usname="",url=""):
-
+    '''
+    Add a service. Takes optional arguments to avoid prompts for 
+    username, url, etc
+    '''
     name = name if name else getUserInput("Service name: ")
     if checkIfServiceExists(name):
         print("Service already exists.")
@@ -160,6 +174,10 @@ def addServicePrompt(name="",usname="",url=""):
     else: return False
 
 def removeServicePrompt(sname=""):
+    '''
+    Remove a service. Takes optional arguments from one-off command 
+    line arguments to avoid prompts for service name
+    '''
     sname = sname if sname else getUserInput("Enter service to be deleted: ")
     if not checkIfServiceExists(sname):
         print("Service not found.")
@@ -179,6 +197,10 @@ def removeServicePrompt(sname=""):
     return success
 
 def getEditData(oldData, dataDescription):
+    '''
+    Used in the editServicePrompt. Shows old data and prompts for 
+    confirmation to change it.
+    '''
     print("Current {}: {}".format(dataDescription, oldData))
     newData = getUserInput("Change {}? (y/N)".format(dataDescription))
     if newData == 'y':
@@ -187,6 +209,9 @@ def getEditData(oldData, dataDescription):
     return newData
 
 def editServicePrompt(name=""):
+    '''
+    Edit a given service. Old data will be kept if it is not changed.
+    '''
     name = name if name else getUserInput("Current service name to edit: ")
     if not checkIfServiceExists(name):
         print("Service does not exist.")
@@ -212,6 +237,9 @@ def editServicePrompt(name=""):
     else: return False
 
 def getPassPrompt(sname=""):
+    '''
+    Copy a service's password to the clipboard
+    '''
     if sname=="":
         sname = getUserInput("Enter service name: ")
         inc = 0
@@ -231,6 +259,9 @@ def getPassPrompt(sname=""):
     return True
 
 def getNamePrompt(sname=""):
+    '''
+    Copy a service's username to the clipboard
+    '''
     if sname=="":
         sname = getUserInput("Enter service name: ")
         inc = 0
@@ -249,6 +280,9 @@ def getNamePrompt(sname=""):
     return True
 
 def getUrlPrompt(sname=""):
+    '''
+    Copy a service's URL to the clipboard
+    '''
     if sname=="":
         inc = 0
         sname = getUserInput("Enter service name: ")

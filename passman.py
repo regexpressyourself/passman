@@ -16,15 +16,19 @@ from offlinemenu import handleOfflineMenu
 
 def main():
     if len(sys.argv) > 1:
+        # Run with command line arguments
         handleCLArgs(sys.argv)
 
     else:
+        # Run a menu-based UI instead
         welcomeMessage()
         if checkConnection("check"): 
+            # Online login and menu
             handleLogin()
             while True:
                 showMenu()
         else:
+            # Offline login and menu
             handleOfflineLogin()
             while True:
                 handleOfflineMenu()

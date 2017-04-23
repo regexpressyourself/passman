@@ -32,6 +32,9 @@ class StoppingThread(Thread):
         return (self._status == 'stopped')
 
 def quit():
+    '''
+    A more graceful quit function
+    '''
     print("\nSee you later!\n")
     if myThread:
         myThread.stop()
@@ -41,6 +44,10 @@ def quit():
     sys.exit()
 
 def getUserInput(prompt, isSecret=False):
+    '''
+    Standardizes, error checks, and allows for secret inputs when 
+    getting information from the user
+    '''
     print(prompt)
     try:
         if (isSecret):
@@ -55,6 +62,9 @@ def getUserInput(prompt, isSecret=False):
         quit()
 
 def clipboard(text,prnt, clear):
+    '''
+    Copy data to clipboard and start a thread to remove it after 20 seconds
+    '''
     pyperclip.copy(text)
     print("Copied to clipboard")
     if prnt:
@@ -78,6 +88,9 @@ def timer(seconds,text):
     clearclip(text)
 
 def clearclip(text):
+    '''
+    Clear the clipboard if nothing has been copied since data 
+    was added to it
+    '''
     if pyperclip.paste() == text:
         pyperclip.copy("")
-    #print("Clipboard cleared")

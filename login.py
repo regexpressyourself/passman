@@ -14,6 +14,9 @@ from JSON import setOfflineUsername
 ############################################################
 
 def repromptLogin():
+    '''
+    Called on login failure to help users try again
+    '''
     print("That doesn't seem to match any of our records...\n")
     nextPrompt = "Try again or go back to menu?\n\n" \
             + "(1) Try Again\n" \
@@ -28,6 +31,9 @@ def repromptLogin():
         repromptLogin()
 
 def handleLogin():
+    '''
+    Handles main menu login/signup functionality
+    '''
     prompt = "Do you want to log in or start a new account?\n"\
             + "(Enter the number of your choice)\n\n" \
             + "(1) Log In\n"\
@@ -44,6 +50,9 @@ def handleLogin():
         handleLogin()
 
 def loginUser(username=""):
+    '''
+    Handles login for online database
+    '''
     if not checkConnection("test"):
         handleOfflineLogin()
     username = username if username else getUserInput("Please enter your username")
@@ -57,6 +66,9 @@ def loginUser(username=""):
 
 
 def signUpUser():
+    '''
+    Handles sign up for new users
+    '''
     if not checkConnection("test"):
         print("Sorry - cannot create user without internet connection")
         quit()
@@ -71,6 +83,10 @@ def signUpUser():
         signUpUser()
 
 def getOfflineUsername(username=""):
+    '''
+    Checks if a user has a local database saved. Reprompts for new 
+    username if none is found.
+    '''
     username = username if username else getUserInput("Please enter your username")
     file_path = os.path.expanduser("~/.passman/{}.json".format(username))
     while not os.path.isfile(file_path):
@@ -80,6 +96,9 @@ def getOfflineUsername(username=""):
     return username
 
 def getOfflinePassword(data):
+    '''
+    Checks a password against that stored in the local database
+    '''
     pw = getUserInput("Please enter your password", True)
     key = hashlib.sha256(pw.encode()).digest()
     hashedpw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
@@ -92,6 +111,9 @@ def getOfflinePassword(data):
     return key
 
 def handleOfflineLogin(username=""):
+    '''
+    Logs in users to local database in lieu of internet connection
+    '''
     print("NOTE: No connection")
     print("Continuing in offline mode. \nYou can retrieve any service data, " \
             +"but you will not be \nable to edit or upload data\n\n")
