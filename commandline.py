@@ -23,6 +23,9 @@ from offlinemenu import getPasswordOffline, listServicesOffline, \
 '''
 
 def handleCLArgs(argv):
+    '''
+    Define an argparse parser for the command line arguments
+    '''
     parser = argparse.ArgumentParser()
     parser.add_argument('-u', '--user', \
             metavar='username', \
@@ -42,6 +45,7 @@ def handleCLArgs(argv):
             help='Get the username for a service')
 
     if checkConnection("test"):
+        # Add these options only if there is an online db connection
         parser.add_argument('-a', '--add', \
                 metavar='service_name', \
                 help='Add a new service to your account')
@@ -59,6 +63,9 @@ def handleCLArgs(argv):
         parseArgsOffline(args)
 
 def parseArgs(args):
+    '''
+    Parse arguments using online database functions
+    '''
     if args.user:
         loginUser(args.user)
     else:
@@ -79,6 +86,9 @@ def parseArgs(args):
         getUrlPrompt(args.www)
 
 def parseArgsOffline(args):
+    '''
+    Parse arguments using offline database functions
+    '''
     if args.user:
         handleOfflineLogin(args.user)
     else:
