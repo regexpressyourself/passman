@@ -44,10 +44,10 @@ def handleLogin():
         print("Please enter a valid option\n")
         handleLogin()
 
-def loginUser():
+def loginUser(username=""):
     if not checkConnection("test"):
         handleOfflineLogin()
-    username = getUserInput("Please enter your username")
+    username = username if username else getUserInput("Please enter your username")
     pw = getUserInput("Please enter your password", True)
     if checkUserCredentials(pw, username):
         setDBUsername(pw, username)
@@ -71,8 +71,8 @@ def signUpUser():
         print("Sorry, that username is already taken")
         signUpUser()
 
-def getOfflineUsername():
-    username = getUserInput("Please enter your username")
+def getOfflineUsername(username=""):
+    username = username if username else getUserInput("Please enter your username")
     file_path = os.path.expanduser("~/.passman/{}.json".format(username))
     while not os.path.isfile(file_path):
         print("Sorry, that user is does not have any saved data")
@@ -92,7 +92,7 @@ def getOfflinePassword(data):
         hashedpw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
     return key
 
-def handleOfflineLogin():
+def handleOfflineLogin(username=""):
     print("NOTE: No connection")
     print("Continuing in offline mode. \nYou can retrieve any service data, " \
             +"but you will not be \nable to edit or upload data\n\n")
@@ -101,7 +101,7 @@ def handleOfflineLogin():
         print("Sorry, no local users found")
         quit()
 
-    username = getOfflineUsername()
+    username = username if username else getOfflineUsername()
     file_path = os.path.expanduser("~/.passman/{}.json".format(username))
 
     with open(file_path) as data_file:
