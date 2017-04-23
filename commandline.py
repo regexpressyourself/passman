@@ -2,10 +2,13 @@
 Handles all things command line - used from passman.py
 '''
 
-from login import handleLogin
+from login import handleLogin, handleOfflineLogin
 from menu import welcomeMessage, listServicesPrompt,\
         addServicePrompt, editServicePrompt, removeServicePrompt,\
         getUrlPrompt, getNamePrompt
+from database import checkConnection
+from offlinemenu import getPasswordOffline, listServicesOffline, \
+        getUserNameOffline, getURLOffline
 
 def printUsage(argv):
     print("Usage:",argv[0],"[{\nadd\t[service name] [service username] [service url]  \nremove\t[service name]  \nedit\t[service name] \nlist\t \npass\t[service name] \nuname\t[service name]  \nurl\t[service name]}]")
@@ -21,23 +24,49 @@ def handleCLArgs(argv):
         printUsage(argv)
 
     welcomeMessage()
-    handleLogin()
+    hasConnection = checkConnection("test")
+
+    if hasConnection:
+        handleLogin()
+    else:
+        handleOfflineLogin()
 
     if argv[1]=="add":
-        handleCLAdd(argv)
+        if hasConnection:
+            handleCLAdd(argv)
+        else:
+            print("Sorry, no connection")
     elif argv[1]=="remove":
-        handleCLRemove(argv)
+        if hasConnection:
+            handleCLRemove(argv)
+        else:
+            print("Sorry, no connection")
     elif argv[1]=="list":
-        listServicesPrompt()
+        if hasConnection:
+            listServicesPrompt()
+        else:
+            listServicesOffline()
     elif argv[1]=="edit":
-        handleCLEdit(argv)
+        if hasConnection:
+            handleCLEdit(argv)
+        else:
+            print("Sorry, no connection")
     elif argv[1]=="pass":
-        handleCLPass(argv)
+        if hasConnection:
+            handleCLPass(argv)
+        else:
+            getPasswordOffline(argv)
     elif argv[1]=="uname":
-        handleCLUName(argv)
+        if hasConnection:
+            handleCLUName(argv)
+        else:
+            getUserNameOffline(argv)
 
     elif argv[1]=="url":
-        handleCLURL(argv)
+        if hasConnection:
+            handleCLURL(argv)
+        else:
+            getURLOffline(argv)
     else:
         printUsage(argv)
 
