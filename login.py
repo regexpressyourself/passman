@@ -8,6 +8,7 @@ import hashlib
 from offlinemenu import handleOfflineMenu
 from database import checkUserCredentials, addUser, \
         setDBUsername, pullDatabase, checkConnection
+from JSON import setOfflineUsername
 
 ############################################################
 # Login Functions
@@ -44,6 +45,8 @@ def handleLogin():
         handleLogin()
 
 def loginUser():
+    if not checkConnection("test"):
+        handleOfflineLogin()
     username = getUserInput("Please enter your username")
     pw = getUserInput("Please enter your password", True)
     if checkUserCredentials(pw, username):
@@ -55,6 +58,9 @@ def loginUser():
 
 
 def signUpUser():
+    if not checkConnection("test"):
+        print("Sorry - cannot create user without internet connection")
+        quit()
     username = getUserInput("Please enter your username")
     pw = getUserInput("Please enter your password", True)
     if addUser(username, pw):
@@ -104,6 +110,5 @@ def handleOfflineLogin():
 
     key = getOfflinePassword(data)
 
-    handleOfflineMenu(username, key)
-
+    setOfflineUsername(username, key)
     return True
