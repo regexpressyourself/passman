@@ -12,9 +12,8 @@ def setOfflineUsername(_name, _key):
     name = _name
     key = _key
 
-
-
 def getServicesOffline():
+    global name
     dir_path = os.path.expanduser("~/.passman")
     file_path = os.path.expanduser("~/.passman/{}.json".format(name))
     if not os.path.isfile(file_path) or \
