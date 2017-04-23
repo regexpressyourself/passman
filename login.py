@@ -84,6 +84,7 @@ def getOfflinePassword(data):
         pw = getUserInput("Please enter your password", True)
         key = hashlib.sha256(pw.encode()).digest()
         hashedpw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
+    return key
 
 def handleOfflineLogin():
     print("NOTE: No connection")
