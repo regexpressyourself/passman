@@ -44,8 +44,8 @@ def listServicesOffline():
         print('{:20}{:20}\n{:20}\n'.format(name, uname, url))
     return True
 
-def getPasswordOffline():
-    sname = getUserInput("Enter service name: ")
+def getPasswordOffline(sname=""):
+    sname = sname if sname else getUserInput("Enter service name: ")
     inc = 0
     while (not getServiceDataOffline(sname)) and inc < 2:
         print("Service not found.")
@@ -58,8 +58,8 @@ def getPasswordOffline():
     clipboard(password, False, True)
     return True
 
-def getUserNameOffline():
-    sname = getUserInput("Enter service name: ")
+def getUserNameOffline(sname=""):
+    sname = sname if sname else getUserInput("Enter service name: ")
     inc = 0
     while (not getServiceDataOffline(sname)) and inc < 2:
         print("Service not found.")
@@ -72,8 +72,8 @@ def getUserNameOffline():
     clipboard(username, False, True)
     return True
 
-def getURLOffline():
-    sname = getUserInput("Enter service name: ")
+def getURLOffline(sname=""):
+    sname = sname if sname else getUserInput("Enter service name: ")
     inc = 0
     while (not getServiceDataOffline(sname)) and inc < 2:
         print("Service not found.")
