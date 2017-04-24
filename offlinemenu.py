@@ -48,9 +48,9 @@ def listServicesOffline():
 
     for service in serviceArray:
         # print them services
-        name = service['service']
+        name  = service['service']
         uname = service['serviceUserName']
-        url = service['serviceUrl']
+        url   = service['serviceUrl']
         print('{:20}{:20}\n{:20}\n'.format(name, uname, url))
 
     return True
@@ -61,16 +61,20 @@ def getPasswordOffline(sname=""):
     JSON file instead
     '''
     sname = sname if sname else getUserInput("Enter service name: ")
-    inc = 0
+    inc   = 0
+
     while (not getServiceDataOffline(sname)) and inc < 2:
         print("Service not found.")
         sname = getUserInput("Enter service name: ")
-        inc += 1
+        inc  += 1
+
     if inc >= 2: # three strikes; you're out
         print("Returning to menu")
         handleOfflineMenu()
+
     password = getServiceDataOffline(sname)['servicePassword']
     clipboard(password, False, True)
+
     return True
 
 def getUserNameOffline(sname=""):
@@ -79,16 +83,20 @@ def getUserNameOffline(sname=""):
     JSON file instead
     '''
     sname = sname if sname else getUserInput("Enter service name: ")
-    inc = 0
+    inc   = 0
+
     while (not getServiceDataOffline(sname)) and inc < 2:
         print("Service not found.")
         sname = getUserInput("Enter service name: ")
         inc += 1
+
     if inc >= 2: # three strikes; you're out
         print("Returning to menu")
         handleOfflineMenu()
+
     username = getServiceDataOffline(sname)['serviceUserName']
     clipboard(username, False, True)
+
     return True
 
 def getURLOffline(sname=""):
@@ -97,14 +105,18 @@ def getURLOffline(sname=""):
     JSON file instead
     '''
     sname = sname if sname else getUserInput("Enter service name: ")
-    inc = 0
+    inc   = 0
+
     while (not getServiceDataOffline(sname)) and inc < 2:
         print("Service not found.")
         sname = getUserInput("Enter service name: ")
         inc += 1
+
     if inc >= 2: # three strikes; you're out
         print("Returning to menu")
         handleOfflineMenu()
+
     serviceURL = getServiceDataOffline(sname)['serviceUrl']
     clipboard(serviceURL, False, True)
+
     return True

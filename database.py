@@ -9,14 +9,13 @@ from pymongo import MongoClient
 from encryption import encrypt, decrypt
 # need to pull this from an environment variable
 
-client = MongoClient('mongodb://passman:passman@ds161640.mlab.com:61640/passman?serverSelectionTimeoutMS=50')
-
-db = client.passman
-
+mongoURL   = 'mongodb://passman:passman@ds161640.mlab.com:61640/passman\
+              ?serverSelectionTimeoutMS=500'
+client     = MongoClient(mongoURL)
+db         = client.passman
 collection = db.main_collection
-
-userName = ""
-key=None
+userName   = ""
+key        = None
 
 def setDBUsername(pw, username=""):
     '''
@@ -25,6 +24,7 @@ def setDBUsername(pw, username=""):
     global userName
     if username != "":
         userName = username
+
     global key
     key = hashlib.sha256(pw.encode()).digest()
 
@@ -33,8 +33,7 @@ def existsDuplicateUser(name, pw):
     Check if a user is already in the database on signup
     '''
     user = collection.find_one({"name": name})
-    if (user): return True
-    else: return False
+    return user
 
 def addUser(name, pw):
     '''
@@ -53,9 +52,9 @@ def addUser(name, pw):
 
     try:
         result = collection.insert_one({
-            'name': name,
+            'name':     name,
             'password': pw,
-            'data': []
+            'data':     []
             })
     except:
         print("Error adding user")
@@ -63,7 +62,7 @@ def addUser(name, pw):
     if result: return True
     else: return False
 
-def checkConnection(name):
+def checkConnection(name="test"):
     '''
     A generic check for a database connection
     '''
@@ -84,8 +83,7 @@ def checkUserCredentials(pw, name=""):
     try:
         user = collection.find_one({"name": name, "password": pw})
         #TODO check timestamps on db
-        if (user): return True
-        else: return False
+        return user
     except:
         print("Error checking user credentials")
 
@@ -112,13 +110,15 @@ def checkIfServiceExists(name):
     '''
 
     serviceArray = getAllServices()
-    if not serviceArray:
-        return False
+    found        = False
 
-    found = False
+    if not serviceArray:
+        return found
+
     for service in serviceArray:
         if decrypt(service['service'], key) == name:
             found = True
+
     return found
 
 def addService(name, pw, serviceUrl="", serviceUserName=""):
@@ -134,16 +134,15 @@ def addService(name, pw, serviceUrl="", serviceUserName=""):
         global key
         result = collection.find_one_and_update({'name': userName},{'$push':{
             'data': {
-                'service': encrypt(name, key),
+                'service':         encrypt(name, key),
                 'servicePassword': encrypt(pw, key),
-                'serviceUrl': encrypt(serviceUrl, key),
+                'serviceUrl':      encrypt(serviceUrl, key),
                 'serviceUserName': encrypt(serviceUserName, key)
             }
         }
         })
 
-        if result: return True
-        else: return False
+        return result
 
     else:
         print("\nERROR: Database already contains service " + name+"\n")
@@ -153,13 +152,11 @@ def removeService(name):
     Remove a service from an account.
     '''
 
-    name = getServiceByName(name)['service']
-
+    name   = getServiceByName(name)['service']
     result = collection.update({'name': userName},
             {'$pull':{ 'data': {'service' : name}}})
 
-    if result: return True
-    else: return False
+    return result
 
 def updateService(oldName, newName, pw, serviceUrl="", serviceUserName=""):
     '''
@@ -188,8 +185,8 @@ def getServiceData(name,data):
     Get a specific subset of data from a service 
     (i.e. just the username, password, etc.)
     '''
-    service = getServiceByName(name)
     global key
+    service = getServiceByName(name)
     return decrypt(service[data], key)
 
 def getAllServiceNames():
@@ -197,13 +194,16 @@ def getAllServiceNames():
     Get all the names of existing services for a user
     '''
     serviceArray = getAllServices()
-    serviceNames=[]
+    serviceNames = []
+
     if not serviceArray:
         serviceArray = []
         return None
+
     for service in serviceArray:
         global key
         serviceNames.append(decrypt(service['service'], key))
+
     return serviceNames
 
 def changePassword(password):
@@ -211,13 +211,13 @@ def changePassword(password):
     Change the master password (the password to passman itself) for a user
     '''
     global userName
+
     setDBUsername(password)
+
     password = hashlib.sha512(password.encode('utf-8')).hexdigest()
 
     result = collection.find_one_and_update({'name': userName},{'$set':{
-        'password': password
-        }
-        })
+        'password': password } })
     return result
 
 def getFullJson():
@@ -225,10 +225,13 @@ def getFullJson():
     Convert the online database into plain JSON for local storage
     '''
     global userName
+
     result = None
+
     if userName:
         result = collection.find_one({'name': userName})
         result["_id"] = ""
+
     return result
 
 def checkDirectory(dir_path):
@@ -256,7 +259,8 @@ def pullDatabase():
     pull it down when needed
     '''
     global userName
-    dir_path = os.path.expanduser("~/.passman")
+
+    dir_path  = os.path.expanduser("~/.passman")
     file_path = os.path.expanduser("~/.passman/{}.json".format(userName))
 
     checkDirectory(dir_path)
