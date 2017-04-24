@@ -168,7 +168,7 @@ def updateService(oldName, newName, pw, serviceUrl="", serviceUserName=""):
     username, etc. even if they have not been changed
     '''
     removeService(oldName)
-    addService(newName, pw, serviceUrl, serviceUserName)
+    return addService(newName, pw, serviceUrl, serviceUserName)
 
 def getServiceByName(name):
     '''

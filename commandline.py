@@ -13,14 +13,17 @@ from offlinemenu import getPasswordOffline, listServicesOffline, \
 from functions import quit
 
 '''
--u -user:   Passman username
--w -www:    URL
--n -name:   Service login name
--p -pass:   Password
--e -edit:   Edit
--r -remove: Remove
--l -list:   List
--a -add:    Add
+A little sample of our usage. Using argparse gets a little complicated.
+Here's the tl;dr:
+
+-u --user:   Passman username
+-w --www:    URL
+-n --name:   Service login name
+-p --pass:   Password
+-e --edit:   Edit
+-r --remove: Remove
+-l --list:   List
+-a --add:    Add
 '''
 
 def handleCLArgs(argv):
@@ -28,6 +31,7 @@ def handleCLArgs(argv):
     Define an argparse parser for the command line arguments
     '''
     parser = argparse.ArgumentParser()
+
     parser.add_argument('-u', '--user', \
             metavar='username', \
             help='Your username for passman')
@@ -57,20 +61,26 @@ def handleCLArgs(argv):
                 metavar='service_name', \
                 help='Remove and existing service')
 
-    args = parser.parse_args()
-    if checkConnection("test"):
+    # I guess they call this a Namespace.
+    # It's just a regular old object in javascript...
+    args = parser.parse_args()     
+
+    if checkConnection("test"): # thar be a connection
         parseArgs(args)
-    else:
-        parseArgsOffline(args)
+    else:                       # thar be the bay of no mongo
+        parseArgsOffline(args) 
 
 def parseArgs(args):
     '''
     Parse arguments using online database functions
     '''
     if args.user:
+        # login user if username provided
         loginUser(args.user)
     else:
+        # prompt login if no user given
         loginUser()
+
     if args.add:
         addServicePrompt(args.add)
     if args.edit:
@@ -92,9 +102,12 @@ def parseArgsOffline(args):
     Parse arguments using offline database functions
     '''
     if args.user:
+        # login user if username provided
         handleOfflineLogin(args.user)
     else:
+        # prompt login if no user given
         handleOfflineLogin()
+
     if args.list:
         listServicesOffline()
     if args.name:

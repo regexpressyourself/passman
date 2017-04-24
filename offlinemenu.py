@@ -40,17 +40,19 @@ def listServicesOffline():
     '''
     print('{:20}{:20}'.format('Service/URL', 'Username'))
     print('-------------------------------------')
-    serviceArray = getServicesOffline()
+    serviceArray = getServicesOffline() # service the array
 
     if not serviceArray:
-        serviceArray = []
+        serviceArray = [] # empty array tricks the for loop down there
         print("No services to show!\n")
 
     for service in serviceArray:
+        # print them services
         name = service['service']
         uname = service['serviceUserName']
         url = service['serviceUrl']
         print('{:20}{:20}\n{:20}\n'.format(name, uname, url))
+
     return True
 
 def getPasswordOffline(sname=""):
@@ -64,7 +66,7 @@ def getPasswordOffline(sname=""):
         print("Service not found.")
         sname = getUserInput("Enter service name: ")
         inc += 1
-    if inc >= 2:
+    if inc >= 2: # three strikes; you're out
         print("Returning to menu")
         handleOfflineMenu()
     password = getServiceDataOffline(sname)['servicePassword']
@@ -82,7 +84,7 @@ def getUserNameOffline(sname=""):
         print("Service not found.")
         sname = getUserInput("Enter service name: ")
         inc += 1
-    if inc >= 2:
+    if inc >= 2: # three strikes; you're out
         print("Returning to menu")
         handleOfflineMenu()
     username = getServiceDataOffline(sname)['serviceUserName']
@@ -100,7 +102,7 @@ def getURLOffline(sname=""):
         print("Service not found.")
         sname = getUserInput("Enter service name: ")
         inc += 1
-    if inc >= 2:
+    if inc >= 2: # three strikes; you're out
         print("Returning to menu")
         handleOfflineMenu()
     serviceURL = getServiceDataOffline(sname)['serviceUrl']
