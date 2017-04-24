@@ -10,6 +10,7 @@ from menu import listServicesPrompt, addServicePrompt, \
 from database import checkConnection
 from offlinemenu import getPasswordOffline, listServicesOffline, \
         getUserNameOffline, getURLOffline
+from functions import quit
 
 '''
 -u -user:   Passman username
@@ -84,6 +85,7 @@ def parseArgs(args):
         removeServicePrompt(args.remove)
     if args.www:
         getUrlPrompt(args.www)
+    quit()
 
 def parseArgsOffline(args):
     '''
@@ -101,4 +103,4 @@ def parseArgsOffline(args):
         getPasswordOffline(args.password)
     if args.www:
         getURLOffline(args.www)
-
+    quit()
