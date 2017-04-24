@@ -96,7 +96,7 @@ def generatePasswordPrompt():
 
     siz = getUserInput("Password length")
 
-    if not siz=='' and not siz.isdecimal():
+    if not siz=='' or not siz.isdecimal():
         print("not a number")
         return ""
 
