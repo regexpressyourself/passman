@@ -13,23 +13,6 @@ from JSON import setOfflineUsername
 # Login Functions
 ############################################################
 
-def repromptLogin():
-    '''
-    Called on login failure to help users try again
-    '''
-    print("That doesn't seem to match any of our records...\n")
-    nextPrompt = "Try again or go back to menu?\n\n" \
-            + "(1) Try Again\n" \
-            + "(2) Main Menu"
-    choice = getUserInput(nextPrompt)
-    if choice == "1":
-        loginUser()
-    elif choice == "2":
-        handleLogin()
-    else:
-        print("I didn't recognize that input")
-        repromptLogin()
-
 def handleLogin():
     '''
     Handles main menu login/signup functionality
@@ -53,17 +36,23 @@ def loginUser(username=""):
     '''
     Handles login for online database
     '''
-    if not checkConnection("test"):
-        handleOfflineLogin()
+    isCommandLine = username
     username = username if username else getUserInput("Please enter your username")
+    if not checkConnection("test"):
+        handleOfflineLogin(username)
     pw = getUserInput("Please enter your password", True)
-    if checkUserCredentials(pw, username):
-        setDBUsername(pw, username)
-        pullDatabase()
-        return True
-    else:
-        repromptLogin()
+    inc = 0
+    while not checkUserCredentials(pw, username) and inc < 2:
+        print("Sorry, that doesn't match our records")
+        pw = getUserInput("Please enter your password", True)
+        inc += 1
 
+    if inc >= 2:
+        quit()
+
+    setDBUsername(pw, username)
+    pullDatabase()
+    return True
 
 def signUpUser():
     '''
@@ -82,12 +71,12 @@ def signUpUser():
         print("Sorry, that username is already taken")
         signUpUser()
 
-def getOfflineUsername(username=""):
+def getOfflineUsername():
     '''
     Checks if a user has a local database saved. Reprompts for new 
     username if none is found.
     '''
-    username = username if username else getUserInput("Please enter your username")
+    username = getUserInput("Please enter your username")
     file_path = os.path.expanduser("~/.passman/{}.json".format(username))
     while not os.path.isfile(file_path):
         print("Sorry, that user is does not have any saved data")
@@ -103,11 +92,15 @@ def getOfflinePassword(data):
     key = hashlib.sha256(pw.encode()).digest()
     hashedpw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
 
-    while hashedpw != data['password']:
+    inc = 0
+    while hashedpw != data['password'] and inc < 2:
         print("Wrong password")
         pw = getUserInput("Please enter your password", True)
         key = hashlib.sha256(pw.encode()).digest()
         hashedpw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
+        inc += 1
+    if inc >= 2:
+        quit()
     return key
 
 def handleOfflineLogin(username=""):
