@@ -99,15 +99,15 @@ def generatePasswordPrompt():
 
     siz = getUserInput("Password length (default: 30)")
 
-    while not siz.isdecimal() or siz == 0:
-        print("Not a number")
-        siz = getUserInput("Password length (default: 30)")
+    if not siz=='' and not siz.isdecimal():
+        print("not a number")
+        return ""
 
     size = int(siz) if siz else 30
 
-    while size < 5:
+    if size < 5:
         print("Minimum length is 5")
-        siz = getUserInput("Password length (default: 30)")
+        return False
 
     # Any character combination that isn't 'y' or 'n' counts as E
     charlist  = string.ascii_lowercase if not lc == 'n' else ''
