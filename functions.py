@@ -7,8 +7,8 @@ import time
 # getpass for no echo on user input
 from getpass import getpass
 from threading import Thread
-from time import sleep
 import pyperclip
+from database import pullDatabase, checkConnection
 
 ############################################################
 # Generic Functions
@@ -32,12 +32,22 @@ class StoppingThread(Thread):
         return (self._status == 'stopped')
 
 def quit():
+    '''
+    A more graceful quit function
+    '''
     print("\nSee you later!\n")
     if myThread:
         myThread.stop()
+    if checkConnection("test"):
+        pullDatabase()
+
     sys.exit()
 
 def getUserInput(prompt, isSecret=False):
+    '''
+    Standardizes, error checks, and allows for secret inputs when 
+    getting information from the user
+    '''
     print(prompt)
     try:
         if (isSecret):
@@ -52,6 +62,9 @@ def getUserInput(prompt, isSecret=False):
         quit()
 
 def clipboard(text,prnt, clear):
+    '''
+    Copy data to clipboard and start a thread to remove it after 20 seconds
+    '''
     pyperclip.copy(text)
     print("Copied to clipboard")
     if prnt:
@@ -68,13 +81,16 @@ def timer(seconds,text):
     global myThread
     for i in range(seconds):
         if myThread.is_running():
-            sleep(1)
+            time.sleep(1)
         else:
             myThread.stopped()
             return
     clearclip(text)
 
 def clearclip(text):
+    '''
+    Clear the clipboard if nothing has been copied since data 
+    was added to it
+    '''
     if pyperclip.paste() == text:
         pyperclip.copy("")
-    #print("Clipboard cleared")

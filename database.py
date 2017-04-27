@@ -2,36 +2,38 @@
 Handles all database CRUD and encryption
 '''
 
-from pymongo import MongoClient
-import base64
+import os
 import hashlib
-from Crypto import Random
-from Crypto.Cipher import AES
+import json
+from pymongo import MongoClient
+from encryption import encrypt, decrypt
 # need to pull this from an environment variable
 
-client = MongoClient('mongodb://passman:passman@ds161640.mlab.com:61640/passman?serverSelectionTimeoutMS=5000')
-
-db = client.passman
-
+mongoURL   = 'mongodb://passman:passman@ds161640.mlab.com:61640/passman\
+              ?serverSelectionTimeoutMS=500'
+client     = MongoClient(mongoURL)
+db         = client.passman
 collection = db.main_collection
+userName   = ""
+key        = None
 
-userName = ""
-key=None
-bs = 32
-
-def setDBUsername(username,pw):
+def setDBUsername(pw, username=""):
+    '''
+    Set the global key and username for use throughout runtime
+    '''
     global userName
-    userName = username
+    if username != "":
+        userName = username
+
     global key
     key = hashlib.sha256(pw.encode()).digest()
 
 def existsDuplicateUser(name, pw):
+    '''
+    Check if a user is already in the database on signup
+    '''
     user = collection.find_one({"name": name})
-    if (user): return True
-    else: return False
-
-
-
+    return user
 
 def addUser(name, pw):
     '''
@@ -50,28 +52,40 @@ def addUser(name, pw):
 
     try:
         result = collection.insert_one({
-            'name': name,
+            'name':     name,
             'password': pw,
-            'data': []
+            'data':     []
             })
     except:
-        print("No Connection")
-        quit()
+        print("Error adding user")
 
     if result: return True
     else: return False
 
-def checkUserCredentials(name, pw):
+def checkConnection(name="test"):
+    '''
+    A generic check for a database connection
+    '''
+    try:
+        user = collection.find_one({"name": name})
+        return True
+    except:
+        return False
+
+def checkUserCredentials(pw, name=""):
+    '''
+    Check that the username/password combination is in the database
+    '''
+    if name == "":
+        global userName
+        name = userName
     pw = hashlib.sha512(pw.encode('utf-8')).hexdigest()
     try:
         user = collection.find_one({"name": name, "password": pw})
         #TODO check timestamps on db
-        if (user): return True
-        else: return False
+        return user
     except:
-        print("No connection")
-        quit()
-        #TODO implement new offline menu
+        print("Error checking user credentials")
 
 def getAllServices():
     '''
@@ -96,13 +110,15 @@ def checkIfServiceExists(name):
     '''
 
     serviceArray = getAllServices()
-    if not serviceArray:
-        return False
+    found        = False
 
-    found = False
+    if not serviceArray:
+        return found
+
     for service in serviceArray:
-        if decrypt(service['service']) == name:
+        if decrypt(service['service'], key) == name:
             found = True
+
     return found
 
 def addService(name, pw, serviceUrl="", serviceUserName=""):
@@ -115,18 +131,18 @@ def addService(name, pw, serviceUrl="", serviceUserName=""):
 
     found = checkIfServiceExists(name)
     if not found:
+        global key
         result = collection.find_one_and_update({'name': userName},{'$push':{
             'data': {
-                'service': encrypt(name),
-                'servicePassword': encrypt(pw),
-                'serviceUrl': encrypt(serviceUrl),
-                'serviceUserName': encrypt(serviceUserName)
+                'service':         encrypt(name, key),
+                'servicePassword': encrypt(pw, key),
+                'serviceUrl':      encrypt(serviceUrl, key),
+                'serviceUserName': encrypt(serviceUserName, key)
             }
         }
         })
 
-        if result: return True
-        else: return False
+        return result
 
     else:
         print("\nERROR: Database already contains service " + name+"\n")
@@ -136,13 +152,11 @@ def removeService(name):
     Remove a service from an account.
     '''
 
-    name = getServiceByName(name)['service']
-
+    name   = getServiceByName(name)['service']
     result = collection.update({'name': userName},
             {'$pull':{ 'data': {'service' : name}}})
 
-    if result: return True
-    else: return False
+    return result
 
 def updateService(oldName, newName, pw, serviceUrl="", serviceUserName=""):
     '''
@@ -151,7 +165,7 @@ def updateService(oldName, newName, pw, serviceUrl="", serviceUserName=""):
     username, etc. even if they have not been changed
     '''
     removeService(oldName)
-    addService(newName, pw, serviceUrl, serviceUserName)
+    return addService(newName, pw, serviceUrl, serviceUserName)
 
 def getServiceByName(name):
     '''
@@ -160,39 +174,111 @@ def getServiceByName(name):
     serviceArray = getAllServices()
 
     for serviceDict in serviceArray:
-        if decrypt(serviceDict["service"]) == name:
+        global key
+        if decrypt(serviceDict["service"], key) == name:
             service = serviceDict
 
     return service
 
 def getServiceData(name,data):
+    '''
+    Get a specific subset of data from a service 
+    (i.e. just the username, password, etc.)
+    '''
+    global key
     service = getServiceByName(name)
-    return decrypt(service[data])
+    return decrypt(service[data], key)
 
 def getAllServiceNames():
+    '''
+    Get all the names of existing services for a user
+    '''
     serviceArray = getAllServices()
-    serviceNames=[]
+    serviceNames = []
+
     if not serviceArray:
         serviceArray = []
         return None
+
     for service in serviceArray:
-        serviceNames.append(decrypt(service['service']))
+        global key
+        serviceNames.append(decrypt(service['service'], key))
+
     return serviceNames
 
-def encrypt(raw):
-    raw = pad(raw)
-    iv = Random.new().read(AES.block_size)
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    return base64.b64encode(iv + cipher.encrypt(raw))
+def changePassword(password):
+    '''
+    Change the master password (the password to passman itself) for a user
+    '''
+    global userName
 
-def decrypt(enc):
-    enc = base64.b64decode(enc)
-    iv = enc[:AES.block_size]
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    return unpad(cipher.decrypt(enc[AES.block_size:])).decode('utf-8')
+    setDBUsername(password)
 
-def pad(s):
-    return s + (bs - len(s) % bs) * chr(bs - len(s) % bs)
+    password = hashlib.sha512(password.encode('utf-8')).hexdigest()
 
-def unpad(s):
-    return s[:-ord(s[len(s)-1:])]
+    result = collection.find_one_and_update({'name': userName},{'$set':{
+        'password': password } })
+    return result
+
+def getFullJson():
+    '''
+    Convert the online database into plain JSON for local storage
+    '''
+    global userName
+
+    result = None
+
+    if userName:
+        result = collection.find_one({'name': userName})
+        result["_id"] = ""
+
+    return result
+
+def checkDirectory(dir_path):
+    '''
+    Check for and/or create the ~/.passman directory
+    '''
+    if not os.path.isdir(dir_path):
+        os.makedirs(dir_path)
+
+def checkFile(file_path):
+    '''
+    Check for and/or create the ~/.passman/<user>.json file
+    '''
+    if not os.path.isfile(file_path):
+        open(file_path, 'w').close() # create file
+
+def pullDatabase():
+    '''
+    Pull the online database to a local file for offline usage later.
+
+    This is called on login and on quit. Any changes in between will not 
+    be logged into the local file.
+
+    Potential improvement here: check timestamps on the database to only 
+    pull it down when needed
+    '''
+    global userName
+
+    dir_path  = os.path.expanduser("~/.passman")
+    file_path = os.path.expanduser("~/.passman/{}.json".format(userName))
+
+    checkDirectory(dir_path)
+    checkFile(file_path)
+
+    fileTime = os.path.getmtime(file_path)
+
+    if fileTime == fileTime:
+        # TODO Check for matching timestamps once they are implemented
+        # update local db
+        serverDBData = getFullJson()
+        if serverDBData:
+            open(file_path, 'w').close() # erase contents
+            with open(file_path, 'w') as fp:
+                data = json.dumps(serverDBData, indent=4)
+                data.encode('utf-8').strip()
+                fp.write(data)
+            return True
+        else: 
+            return False
+

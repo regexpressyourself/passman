@@ -3,9 +3,10 @@ Handles everything to do with the main command line menu. This includes all func
 '''
 import string
 import random
-from functions import getUserInput, clipboard
+from functions import getUserInput, clipboard, quit
 from database import addService, updateService,\
         checkIfServiceExists, removeService, \
+        checkUserCredentials, changePassword,\
         getServiceData, getAllServiceNames
 
 def welcomeMessage():
@@ -15,6 +16,9 @@ def welcomeMessage():
     print("##################################################\n\n")
 
 def showMenu():
+    '''
+    Show the main menu for command-line usage
+    '''
     prompt = "What do you want to do?\n\n" \
     + "(1) List all services\n" \
     + "(2) Add a new service\n" \
@@ -22,7 +26,8 @@ def showMenu():
     + "(4) Edit an existing service\n" \
     + "(5) Get password for a service\n" \
     + "(6) Get username for a service\n" \
-    + "(7) get URL for a service\n\n"
+    + "(7) Get URL for a service\n" \
+    + "(8) Change master password\n\n"
 
     option = getUserInput(prompt)
     if option =="1":
@@ -39,6 +44,8 @@ def showMenu():
         getNamePrompt()
     elif option =="7":
         getUrlPrompt()
+    elif option =="8":
+        changeMasterPrompt()
     else:
         print("Didn't get that...\n")
         showMenu()
@@ -48,30 +55,62 @@ def showMenu():
 # Menu Navigation Functions
 ############################################################
 
+def changeMasterPrompt():
+    '''
+    Menu for changing the master password to the passman application
+    '''
+    oldPass = getUserInput("Enter your old password", True)
+    isUser  = checkUserCredentials(oldPass) # check the name/pw
+    inc     = 0
+
+    while (not isUser) and inc < 2:
+        print("That didn't work")
+        oldPass = getUserInput("Enter your old password", True)
+        isUser  = checkUserCredentials(oldPass)
+        inc    += 1
+    if (inc >= 2): # three strikes; you're out
+        quit()
+
+    newPass = getUserInput("Enter your new password", True)
+    newPassCheck = getUserInput("Once more, with feeling", True)
+
+    while newPass != newPassCheck:
+        print("Sorry. Those didn't match.")
+        newPass = getUserInput("Enter your new password", True)
+        newPassCheck = getUserInput("Once more, with feeling", True)
+
+    changePassword(newPass)
+    return True
+
 def generatePasswordPrompt():
-    lc = getUserInput("Include lowercase? (y/n/E)")
-    uc = getUserInput("Incldue Uppercase? (y/n/E)")
-    dig = getUserInput("Include numbers? (y/n/E)")
+    '''
+    Generates a random password to the users specifications
+    '''
+    lc   = getUserInput("Include lowercase? (y/n/E)")
+    uc   = getUserInput("Incldue Uppercase? (y/n/E)")
+    dig  = getUserInput("Include numbers? (y/n/E)")
     punc = getUserInput("Include special characters? (y/n/E)")
-    spc = getUserInput("Include spaces? (y/n/E)")
+    spc  = getUserInput("Include spaces? (y/n/E)")
 
     if lc=='n' and uc=='n' and dig=='n' and punc=='n' and spc=='n':
+        # gotta have something...
         print("No character set chosen")
         return ""
 
-    siz = getUserInput("Password length")
+    siz = getUserInput("Password length (default: 30)")
 
-    if not siz=='' and not siz.isdecimal():
-        print("not a number")
-        return ""
+    while not siz.isdecimal() or siz == 0:
+        print("Not a number")
+        siz = getUserInput("Password length (default: 30)")
 
     size = int(siz) if siz else 30
 
-    if size < 5:
+    while size < 5:
         print("Minimum length is 5")
-        return ""
+        siz = getUserInput("Password length (default: 30)")
 
-    charlist = string.ascii_lowercase if not lc == 'n' else ''
+    # Any character combination that isn't 'y' or 'n' counts as E
+    charlist  = string.ascii_lowercase if not lc == 'n' else ''
     charlist += string.ascii_uppercase if not uc =='n' else ''
     charlist += string.digits if not dig == 'n' else ''
     charlist += string.punctuation if not punc == 'n' else ''
@@ -79,6 +118,7 @@ def generatePasswordPrompt():
 
     matched = False
     while not matched:
+        # Find your next date on match.com 
         password=''
         for _ in range(size):
             password += ''.join(random.SystemRandom().choice(charlist))
@@ -98,7 +138,10 @@ def generatePasswordPrompt():
     return password
 
 def listServicesPrompt():
-
+    '''
+    List the available services in an easy-to-read fashion
+    '''
+    # pretty print
     print('{:20}{:20}'.format('Service/URL', 'Username'))
     print('-------------------------------------')
     serviceArray = getAllServiceNames()
@@ -115,13 +158,17 @@ def listServicesPrompt():
     return True
 
 def addServicePrompt(name="",usname="",url=""):
-
+    '''
+    Add a service. Takes optional arguments to avoid prompts for 
+    username, url, etc
+    '''
     name = name if name else getUserInput("Service name: ")
     if checkIfServiceExists(name):
         print("Service already exists.")
+        # get out
         return False
 
-    usname = usname if usname else getUserInput("Username: ")
+    usname = usname if usname else getUserInput("Service username: ")
 
     password = getUserInput("Password [leave blank to generate]: ", True)
     while password == "":
@@ -130,10 +177,13 @@ def addServicePrompt(name="",usname="",url=""):
     url = url if url else getUserInput("Service URL: ")
 
     result = addService(name, password, url, usname)
-    if result: return True
-    else: return False
+    return result
 
 def removeServicePrompt(sname=""):
+    '''
+    Remove a service. Takes optional arguments from one-off command 
+    line arguments to avoid prompts for service name
+    '''
     sname = sname if sname else getUserInput("Enter service to be deleted: ")
     if not checkIfServiceExists(sname):
         print("Service not found.")
@@ -141,39 +191,50 @@ def removeServicePrompt(sname=""):
 
     print("Delete ",sname,". This cannot be undone.",sep="")
     confirm = getUserInput("Are you sure? (y/N)")
-    if confirm == "y" or confirm =="Y":
+    if confirm == "y" or confirm =="Y": # capitalize me, cap'n
         success = removeService(sname)
         if success:
-            print(sname,"successfully deleted.")
+            print(sname,"Successfully deleted.")
         else:
-            print("Remove failed, unknown error occured.")
+            print("Remove failed, unknown error occured.") #spookyerrors
     else:
-        print("Aborting")
+        print("Something terrible happened. Aborting")
         success = False
     return success
 
 def getEditData(oldData, dataDescription):
+    '''
+    Used in the editServicePrompt. Shows old data and prompts for 
+    confirmation to change it.
+    '''
     print("Current {}: {}".format(dataDescription, oldData))
     newData = getUserInput("Change {}? (y/N)".format(dataDescription))
     if newData == 'y':
         newData = getUserInput("Enter the new {}".format(dataDescription))
-    else: newData = oldData
+    else: newData = oldData # new is always better
     return newData
 
 def editServicePrompt(name=""):
+    '''
+    Edit a given service. Old data will be kept if it is not changed.
+    '''
     name = name if name else getUserInput("Current service name to edit: ")
     if not checkIfServiceExists(name):
         print("Service does not exist.")
         return False
-    oldName = getServiceData(name, 'service')
+
+    # store the old stuff
+    oldName     = getServiceData(name, 'service')
     oldUserName = getServiceData(name, 'serviceUserName')
-    oldUrl = getServiceData(name, 'serviceUrl')
+    oldUrl      = getServiceData(name, 'serviceUrl')
+    oldPassword = getServiceData(name, 'servicePassword')
 
-    newName = getEditData(oldName, "service name")
+    # get the new stuff
+    newName     = getEditData(oldName, "service name")
     newUserName = getEditData(oldUserName, "service username")
-    newUrl = getEditData(oldUrl, "service url")
-
+    newUrl      = getEditData(oldUrl, "service url")
     newPassword = getUserInput("Change password? (y/N)")
+
     if newPassword == 'y':
         newPassword = getUserInput("Password [leave blank to generate]: ", True)
         if newPassword == "":
@@ -181,18 +242,20 @@ def editServicePrompt(name=""):
     else: newPassword = oldPassword
 
     result = updateService(oldName, newName, newPassword, newUrl, newUserName)
-    if result: return True
-    else: return False
+    return result
 
 def getPassPrompt(sname=""):
-    if sname=="":
+    '''
+    Copy a service's password to the clipboard
+    '''
+    if sname == "":
         sname = getUserInput("Enter service name: ")
         inc = 0
         while (not checkIfServiceExists(sname)) and inc < 2:
             print("Service not found.")
             sname = getUserInput("Enter service name: ")
             inc += 1
-        if inc >= 2:
+        if inc >= 2: # three strikes; you're out
             print("Returning to menu")
             showMenu()
 
@@ -200,10 +263,13 @@ def getPassPrompt(sname=""):
         if not checkIfServiceExists(sname):
             print("Service not found.")
             return False
-    clipboard(getServiceData(sname, 'servicePassword'),False, True)
+    clipboard(getServiceData(sname, 'servicePassword'), False, True)
     return True
 
 def getNamePrompt(sname=""):
+    '''
+    Copy a service's username to the clipboard
+    '''
     if sname=="":
         sname = getUserInput("Enter service name: ")
         inc = 0
@@ -211,24 +277,27 @@ def getNamePrompt(sname=""):
             print("Service not found.")
             sname = getUserInput("Enter service name: ")
             inc += 1
-        if inc >= 2:
+        if inc >= 2: # three strikes; you're out
             print("Returning to menu")
             showMenu()
     else:
         if not checkIfServiceExists(sname):
             print("Service not found.")
             return False
-    clipboard(getServiceData(sname, 'serviceUserName'),True,True)
+    clipboard(getServiceData(sname, 'serviceUserName'), True, True)
     return True
 
 def getUrlPrompt(sname=""):
+    '''
+    Copy a service's URL to the clipboard
+    '''
     if sname=="":
         inc = 0
         sname = getUserInput("Enter service name: ")
         while (not checkIfServiceExists(sname)) and inc < 2:
             print("Service not found.")
             sname = getUserInput("Enter service name: ")
-        if inc >= 2:
+        if inc >= 2: # three strikes; you're out
             print("Returning to menu")
             showMenu()
     else:
@@ -236,5 +305,5 @@ def getUrlPrompt(sname=""):
             print("Service not found.")
             return False
 
-    clipboard(getServiceData(sname,'serviceUrl'),True, True)
+    clipboard(getServiceData(sname,'serviceUrl'), True, True)
     return True
