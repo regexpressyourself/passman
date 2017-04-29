@@ -128,7 +128,11 @@ def handleOfflineLogin(username=""):
     with open(file_path) as data_file:
         data = data_file.read()
 
-    data = ast.literal_eval(data) # from string to dict
+    if data:
+        data = ast.literal_eval(data) # from string to dict
+    else:
+        print("Sorry, cannot get data")
+        quit()
 
     key = getOfflinePassword(data)
 

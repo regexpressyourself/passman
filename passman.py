@@ -6,8 +6,6 @@ Main driver of the program
 '''
 import sys
 
-from splash import showSplash
-
 from login import handleLogin, handleOfflineLogin
 from commandline import handleCLArgs
 from menu import showMenu, welcomeMessage
@@ -33,10 +31,5 @@ def main():
             while True:
                 handleOfflineMenu()
 
-
-
-
-
 # run the program
-#showSplash()
 main()

@@ -9,8 +9,7 @@ from pymongo import MongoClient
 from encryption import encrypt, decrypt
 # need to pull this from an environment variable
 
-mongoURL   = 'mongodb://passman:passman@ds161640.mlab.com:61640/passman\
-              ?serverSelectionTimeoutMS=500'
+mongoURL   = 'mongodb://passman:passman@ds161640.mlab.com:61640/passman?serverSelectionTimeoutMS=500'
 client     = MongoClient(mongoURL)
 db         = client.passman
 collection = db.main_collection
@@ -62,7 +61,7 @@ def addUser(name, pw):
     if result: return True
     else: return False
 
-def checkConnection(name="test"):
+def checkConnection(name):
     '''
     A generic check for a database connection
     '''
