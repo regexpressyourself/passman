@@ -1,0 +1,9 @@
+include passman.py
+include commandline.py
+include database.py
+include encryption.py
+include functions.py
+include JSON.py
+include login.py
+include menu.py
+include offlinemenu.py
