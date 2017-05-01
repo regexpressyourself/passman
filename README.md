@@ -1,10 +1,33 @@
 # Passman
 
-Sam Messina
-Dan Jensen
-
 Passman is a password management application that allows for password generation, storage, retrieval, updates, and removal from the comfort of the command line.
-Security; password management
+
+Passman was written by:
+
+[Sam Messina](https://github.com/regexpressyourself)
+
+[Dan Jensen](https://github.com/nosnixster)
+
+## Installing
+
+Passman is pip-installable, using 
+
+```
+pip install passman
+```
+
+After installing, simply run:
+
+```
+passman
+```
+
+If you encounter errors, first check the following dependencies:
+
+- Python 3. Passman will not work with Python 2
+- A copy/paste mechanism for the system (e.g. [xsel](http://www.vergenet.net/~conrad/software/xsel/))
+- If on Windows, you will need Visual C++ Build Tools to enable pycrypto. [See Microsoft's site for more info.](http://landinghub.visualstudio.com/visual-cpp-build-tools)
+
 
 ## Introduction 
 
@@ -59,3 +82,9 @@ optional arguments:
   -r service_name, --remove service_name
                         Remove and existing service
 ```
+
+## Special Thanks
+
+Ayush Kohli: https://github.com/akohli96
+
+Greg Brinkman: https://github.com/GregoryBrinkman
