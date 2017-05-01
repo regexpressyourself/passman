@@ -44,7 +44,7 @@ def handleCLArgs(argv):
             help='Get password for a service')
     parser.add_argument('-w', '--www', \
             metavar='service_name', \
-            help='Get URL for a service')
+            help='Get login URL for a service')
     parser.add_argument('-n', '--name', \
             metavar='service_name', \
             help='Get the username for a service')

@@ -13,7 +13,7 @@ def handleOfflineMenu():
     + "(1) List all services\n" \
     + "(2) Get password for a service\n" \
     + "(3) Get username for a service\n" \
-    + "(4) Get URL for a service\n\n" 
+    + "(4) Get the login URL for a service\n\n" 
 
     option = getUserInput(prompt)
     if option =="1":

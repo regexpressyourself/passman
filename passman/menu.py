@@ -32,7 +32,7 @@ def showMenu():
     + "(4) Edit an existing service\n" \
     + "(5) Get password for a service\n" \
     + "(6) Get username for a service\n" \
-    + "(7) Get URL for a service\n" \
+    + "(7) Get login URL for a service\n" \
     + "(8) Change master password\n\n"
 
     option = getUserInput(prompt)
@@ -180,7 +180,7 @@ def addServicePrompt(name="",usname="",url=""):
     while password == "":
         password = generatePasswordPrompt()
 
-    url = url if url else getUserInput("Service URL: ")
+    url = url if url else getUserInput("Service login URL: ")
 
     result = addService(name, password, url, usname)
     return result
