@@ -1,3 +1,9 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+'''
+Main driver of the program
+'''
 import sys
 import random
 import os
@@ -14,13 +20,16 @@ import asciimatics
 import pyperclip
 import Crypto
 
+import commandline
+import database
+import encryption
+import functions
+import JSON
+import login
+import menu
+import offlinemenu
 
-__all__ = ['commandline', 'database', 'encryption', 'functions', 'JSON', 'login', 'menu', 'offlinemenu']
 
-
-'''
-Main driver of the program
-'''
 from .login import handleLogin, handleOfflineLogin
 from .commandline import handleCLArgs
 from .menu import showMenu, welcomeMessage
@@ -46,5 +55,5 @@ def main():
             while True:
                 handleOfflineMenu()
 
-# run the program
-main()
+if __name__ == '__main__':
+  main()

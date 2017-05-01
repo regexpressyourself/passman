@@ -3,14 +3,14 @@ Handles all things command line - used from passman.py
 '''
 
 import argparse
-from login import handleOfflineLogin, loginUser
-from menu import listServicesPrompt, addServicePrompt, \
+from .login import handleOfflineLogin, loginUser
+from .menu import listServicesPrompt, addServicePrompt, \
         editServicePrompt, removeServicePrompt,\
         getUrlPrompt, getNamePrompt, getPassPrompt
-from database import checkConnection
-from offlinemenu import getPasswordOffline, listServicesOffline, \
+from .database import checkConnection
+from .offlinemenu import getPasswordOffline, listServicesOffline, \
         getUserNameOffline, getURLOffline
-from functions import quit
+from .functions import quit
 
 '''
 A little sample of our usage. Using argparse gets a little complicated.

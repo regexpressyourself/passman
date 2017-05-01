@@ -3,8 +3,8 @@ Handles everything to do with the main command line menu. This includes all func
 '''
 import string
 import random
-from functions import getUserInput, clipboard, quit
-from database import addService, updateService,\
+from .functions import getUserInput, clipboard, quit
+from .database import addService, updateService,\
         checkIfServiceExists, removeService, \
         checkUserCredentials, changePassword,\
         getServiceData, getAllServiceNames

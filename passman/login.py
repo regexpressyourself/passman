@@ -4,10 +4,10 @@ Handles all Login/Sign Up logic - calling on database module where needed
 import os
 import ast
 import hashlib
-from functions import getUserInput, quit
-from database import checkUserCredentials, addUser, \
+from .functions import getUserInput, quit
+from .database import checkUserCredentials, addUser, \
         setDBUsername, pullDatabase, checkConnection
-from JSON import setOfflineUsername
+from .JSON import setOfflineUsername
 
 ############################################################
 # Login Functions

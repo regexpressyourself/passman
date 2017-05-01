@@ -8,7 +8,7 @@ import time
 from getpass import getpass
 from threading import Thread
 import pyperclip
-from database import pullDatabase, checkConnection
+from .database import pullDatabase, checkConnection
 
 ############################################################
 # Generic Functions
