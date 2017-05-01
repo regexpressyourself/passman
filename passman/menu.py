@@ -195,7 +195,7 @@ def removeServicePrompt(sname=""):
         print("Service not found.")
         return False
 
-    print("Delete ",sname,". This cannot be undone.",sep="")
+    print("Delete {}. This cannot be undone.".format(sname))
     confirm = getUserInput("Are you sure? (y/N)")
     if confirm == "y" or confirm =="Y": # capitalize me, cap'n
         success = removeService(sname)
