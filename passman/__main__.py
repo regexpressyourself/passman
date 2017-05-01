@@ -56,4 +56,8 @@ def main():
                 handleOfflineMenu()
 
 if __name__ == '__main__':
-  main()
+
+    if sys.version_info.major < 3:
+        print("Passman must be run with Python 3 or later")
+    else:
+        main()
