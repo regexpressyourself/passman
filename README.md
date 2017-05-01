@@ -74,3 +74,9 @@ optional arguments:
   -r service_name, --remove service_name
                         Remove and existing service
 ```
+
+## Special Thanks
+
+Ayush Kohli: https://github.com/akohli96
+
+Greg Brinkman: https://github.com/GregoryBrinkman
