@@ -17,7 +17,7 @@ pip install passman
 If you encounter errors, first check the following dependencies:
 
 - Python 3. Passman will not work with Python 2
-- A copy/paste mechanism for the system (e.g. xsel)
+- A copy/paste mechanism for the system (e.g. [xsel](http://www.vergenet.net/~conrad/software/xsel/))
 - If on Windows, you will need Visual C++ Build Tools to enable pycrypto. [See Microsoft's site for more info.](http://landinghub.visualstudio.com/visual-cpp-build-tools)
 
 
