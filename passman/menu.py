@@ -3,16 +3,22 @@ Handles everything to do with the main command line menu. This includes all func
 '''
 import string
 import random
-from functions import getUserInput, clipboard, quit
-from database import addService, updateService,\
+from .functions import getUserInput, clipboard, quit
+from .database import addService, updateService,\
         checkIfServiceExists, removeService, \
         checkUserCredentials, changePassword,\
         getServiceData, getAllServiceNames
 
 def welcomeMessage():
     print("\n\n")
-    print("##################################################")
-    print("# Welcome to Passman!")
+    print("##################################################\n")
+    print("  _____                                    \n\
+ |  __ \                                   \n\
+ | |__) |_ _ ___ ___ _ __ ___   __ _ _ __  \n\
+ |  ___/ _` / __/ __| '_ ` _ \ / _` | '_ \ \n\
+ | |  | (_| \__ \__ \ | | | | | (_| | | | |\n\
+ |_|   \__,_|___/___/_| |_| |_|\__,_|_| |_|\n\
+                                           \n")
     print("##################################################\n\n")
 
 def showMenu():
@@ -99,15 +105,15 @@ def generatePasswordPrompt():
 
     siz = getUserInput("Password length (default: 30)")
 
-    while not siz.isdecimal() or siz == 0:
-        print("Not a number")
-        siz = getUserInput("Password length (default: 30)")
+    if not siz=='' and not siz.isdecimal():
+        print("not a number")
+        return ""
 
     size = int(siz) if siz else 30
 
-    while size < 5:
+    if size < 5:
         print("Minimum length is 5")
-        siz = getUserInput("Password length (default: 30)")
+        return False
 
     # Any character combination that isn't 'y' or 'n' counts as E
     charlist  = string.ascii_lowercase if not lc == 'n' else ''
@@ -189,7 +195,7 @@ def removeServicePrompt(sname=""):
         print("Service not found.")
         return False
 
-    print("Delete ",sname,". This cannot be undone.",sep="")
+    print("Delete {}. This cannot be undone.".format(sname))
     confirm = getUserInput("Are you sure? (y/N)")
     if confirm == "y" or confirm =="Y": # capitalize me, cap'n
         success = removeService(sname)

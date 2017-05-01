@@ -6,8 +6,8 @@ a JSON file in the ~/.passman directory
 import os
 import json
 import ast
-from functions import quit
-from encryption import decrypt
+from .functions import quit
+from .encryption import decrypt
 
 global name
 global key

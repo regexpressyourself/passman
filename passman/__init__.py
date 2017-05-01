@@ -1,18 +1,31 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
+import sys
+import random
+import os
+import json
+import argparse
+import time
+import getpass
+import hashlib
+import ast
+import threading
+import base64
+import pymongo
+import asciimatics
+import pyperclip
+import Crypto
+
+
+__all__ = ['commandline', 'database', 'encryption', 'functions', 'JSON', 'login', 'menu', 'offlinemenu']
+
 
 '''
 Main driver of the program
 '''
-import sys
-
-from splash import showSplash
-
-from login import handleLogin, handleOfflineLogin
-from commandline import handleCLArgs
-from menu import showMenu, welcomeMessage
-from database import checkConnection
-from offlinemenu import handleOfflineMenu
+from .login import handleLogin, handleOfflineLogin
+from .commandline import handleCLArgs
+from .menu import showMenu, welcomeMessage
+from .database import checkConnection
+from .offlinemenu import handleOfflineMenu
 
 def main():
     if len(sys.argv) > 1:
@@ -33,10 +46,5 @@ def main():
             while True:
                 handleOfflineMenu()
 
-
-
-
-
 # run the program
-#showSplash()
 main()

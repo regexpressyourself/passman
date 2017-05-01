@@ -2,8 +2,8 @@
 Handles all offline menu functionality
 '''
 
-from functions import getUserInput, clipboard
-from JSON import getServicesOffline, getServiceDataOffline
+from .functions import getUserInput, clipboard
+from .JSON import getServicesOffline, getServiceDataOffline
 
 def handleOfflineMenu():
     '''
