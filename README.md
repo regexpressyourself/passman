@@ -16,6 +16,12 @@ Passman is pip-installable, using
 pip install passman
 ```
 
+After installing, simply run:
+
+```
+passman
+```
+
 If you encounter errors, first check the following dependencies:
 
 - Python 3. Passman will not work with Python 2
