@@ -65,8 +65,13 @@ def clipboard(text,prnt, clear):
     '''
     Copy data to clipboard and start a thread to remove it after 20 seconds
     '''
-    pyperclip.copy(text)
-    print("Copied to clipboard")
+    try:
+        pyperclip.copy(text)
+        print("Copied to clipboard")
+    except:
+        print("There was an error copying to clipboard. Do you have xsel installed?")
+        quit()
+
     if prnt:
         print(text)
     if clear:
