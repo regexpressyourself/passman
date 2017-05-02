@@ -1,4 +1,4 @@
-# Passman
+![Passman logo](passmanlogo.png)
 
 Passman is a password management application that allows for password generation, storage, retrieval, updates, and removal from the comfort of the command line.
 
