@@ -22,7 +22,7 @@ setup (
         author = 'Sam Messina',
         author_email = 'samuel.messina@gmail.com',
         url = 'https://github.com/regexpressyourself/passman',
-        download_url = 'https://github.com/regexpressyourself/passman/1.1.8.tar.gz',
+        download_url = 'https://github.com/regexpressyourself/passman/archive/1.1.8.tar.gz',
         keywords = ['password', 'manager', 'terminal'],
         entry_points={'console_scripts':['passman=passman.__main__:main']},
         install_requires=[
