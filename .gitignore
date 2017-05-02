@@ -2,3 +2,5 @@ passwords.txt
 __pycache__
 auto
 *.tex
+dist
+passman.egg-info
