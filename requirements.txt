@@ -5,7 +5,6 @@ hashlib
 json
 pymongo
 sys
-asciimatics
 ast
 sys
 time

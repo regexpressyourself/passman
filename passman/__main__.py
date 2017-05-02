@@ -16,7 +16,6 @@ import ast
 import threading
 import base64
 import pymongo
-import asciimatics
 import pyperclip
 import Crypto
 
