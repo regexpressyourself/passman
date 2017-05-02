@@ -13,7 +13,7 @@ setup (
         packages =find_packages(exclude=['build', 'docs', 'templates']), # this must be the same as the name above
         include_package_data=True,
         py_modules=['commandline', 'database', 'encryption', 'functions', 'JSON', 'login', 'menu', 'offlinemenu'],
-        version = '1.1.6',
+        version = '1.1.7',
         description = 'A terminal-based password manager',
         long_description = long_description,
         author = 'Sam Messina',
