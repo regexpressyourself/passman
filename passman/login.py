@@ -81,8 +81,13 @@ def getOfflineUsername(username=""):
     Checks if a user has a local database saved. Reprompts for new 
     username if none is found.
     '''
-    file_path = os.path.expanduser("~/.passman/{}.json".format(username))
-    while not os.path.isfile(file_path):
+    if username:
+        file_path = os.path.expanduser("~/.passman/{}.json".format(username))
+    else:
+        username = getUserInput("Please enter your username")
+        file_path = os.path.expanduser("~/.passman/{}.json".format(username))
+
+    while (not os.path.isfile(file_path)) or (file_path == ".json"):
         print("Sorry, that doesn't match our records")
         username = getUserInput("Please enter your username")
         file_path = os.path.expanduser("~/.passman/{}.json".format(username))
