@@ -38,12 +38,16 @@ def quit():
     if checkConnection("test"):
         pullDatabase()
 
-    if myThread:
+    if myThread and myThread.is_running():
         print("\nData still on clipboard. Ctrl-C to clear and exit")
-        try:
-            input()
-            myThread.stop()
-        except:
+
+        while myThread.is_running():
+            try:
+                time.sleep(1)
+            except:
+                myThread.stop()
+
+        if myThread:
             myThread.stop()
 
     print("\nSee you later!\n")
@@ -96,6 +100,7 @@ def timer(seconds,text):
         else:
             myThread.stopped()
             return
+    myThread.stop()
     clearclip(text)
 
 def clearclip(text):
