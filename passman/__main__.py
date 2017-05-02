@@ -16,7 +16,6 @@ import ast
 import threading
 import base64
 import pymongo
-import asciimatics
 import pyperclip
 import Crypto
 
@@ -30,11 +29,11 @@ import menu
 import offlinemenu
 
 
-from .login import handleLogin, handleOfflineLogin
-from .commandline import handleCLArgs
-from .menu import showMenu, welcomeMessage
-from .database import checkConnection
-from .offlinemenu import handleOfflineMenu
+from passman.login import handleLogin, handleOfflineLogin
+from passman.commandline import handleCLArgs
+from passman.menu import showMenu, welcomeMessage
+from passman.database import checkConnection
+from passman.offlinemenu import handleOfflineMenu
 
 def main():
     if len(sys.argv) > 1:

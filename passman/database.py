@@ -6,7 +6,7 @@ import os
 import hashlib
 import json
 from pymongo import MongoClient
-from .encryption import encrypt, decrypt
+from passman.encryption import encrypt, decrypt
 # need to pull this from an environment variable
 
 mongoURL   = 'mongodb://passman:passman@ds161640.mlab.com:61640/passman?serverSelectionTimeoutMS=500'
