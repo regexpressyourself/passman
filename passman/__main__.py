@@ -19,16 +19,6 @@ import pymongo
 import pyperclip
 import Crypto
 
-import commandline
-import database
-import encryption
-import functions
-import JSON
-import login
-import menu
-import offlinemenu
-
-
 from passman.login import handleLogin, handleOfflineLogin
 from passman.commandline import handleCLArgs
 from passman.menu import showMenu, welcomeMessage
