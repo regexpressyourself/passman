@@ -176,11 +176,11 @@ def addServicePrompt(name="",usname="",url=""):
 
     usname = usname if usname else getUserInput("Service username: ")
 
+    url = url if url else getUserInput("Service login URL: ")
+
     password = getUserInput("Password [leave blank to generate]: ", True)
     while password == "":
         password = generatePasswordPrompt()
-
-    url = url if url else getUserInput("Service login URL: ")
 
     result = addService(name, password, url, usname)
     return result

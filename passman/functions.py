@@ -46,9 +46,11 @@ def quit():
                 time.sleep(1)
             except:
                 myThread.stop()
+                clearclip()
 
         if myThread:
             myThread.stop()
+            clearclip()
 
     print("\nSee you later!\n")
     sys.exit()
@@ -103,10 +105,12 @@ def timer(seconds,text):
     myThread.stop()
     clearclip(text)
 
-def clearclip(text):
+def clearclip(text=""):
     '''
     Clear the clipboard if nothing has been copied since data 
     was added to it
     '''
-    if pyperclip.paste() == text:
+    if text == "":
+        pyperclip.copy("")
+    elif pyperclip.paste() == text:
         pyperclip.copy("")
