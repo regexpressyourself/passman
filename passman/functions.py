@@ -35,12 +35,18 @@ def quit():
     '''
     A more graceful quit function
     '''
-    print("\nSee you later!\n")
-    if myThread:
-        myThread.stop()
     if checkConnection("test"):
         pullDatabase()
 
+    if myThread:
+        print("\nData still on clipboard. Ctrl-C to clear and exit")
+        try:
+            input()
+            myThread.stop()
+        except:
+            myThread.stop()
+
+    print("\nSee you later!\n")
     sys.exit()
 
 def getUserInput(prompt, isSecret=False):
